@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Practica 3</title>
+</head>
+<body>
+<?php
+ej1();
+
+ej2();
+
+ej3();
+?>
+</body>
+</html>
+
+<?php
+function ej1()
+{
+    define("VALOR_PESETA", 166.386);
+    echo "<h1>EJ1</h1>";
+    echo "<h1>Conversión euros/pesetas</h1>";
+    for ($i = 1; $i <= 10; $i++) {
+        echo $i . "€ = " . $i * VALOR_PESETA . "</br>\n";
+    }
+    echo "<hr/>\n";
+}
+
+function ej2()
+{
+    echo "<h1>EJ2</h1>";
+    // Mostramos cabecera de la tabla
+    echo "
+    <table border=\"1\">
+        <tr>
+            <th>Euros</th>
+            <th>Pesetas</th>
+        </tr>";
+
+    //Mostramos la conversión
+    for ($i = 1; $i <= 10; $i++) {
+        echo "<tr>";
+            echo "<td>$i</td>";
+            echo "<td>" . $i * VALOR_PESETA . "</td>";
+        echo "</tr>";
+    }
+    echo "
+    </table>";
+    echo "<hr/>\n";
+}
+
+function ej3()
+{
+    echo "<h1>EJ2</h1>";
+    // Mostramos cabecera de la tabla
+    echo " <table border=\"1\">\n";
+    echo "<tr>\n";
+    echo "<th  bgcolor=\"#FFEECC\">Euros</th>\n";
+    echo "<th  bgcolor=\"#FFEECC\">Pesetas</th>\n";
+    echo "</tr>";
+
+
+    //Mostramos la conversión
+    for ($i = 1; $i <= 10; $i++) {
+        if ($i % 2 == 0)
+            echo "<tr bgcolor=\"#CCCCCC\" >\n";
+        else
+            echo "<tr bgcolor=\"#CCCCAA\" >\n";
+        echo "<td >$i</td>\n";
+        echo "<td>" . $i * VALOR_PESETA . "</td>\n";
+        echo "</tr>\n";
+    }
+    echo "
+    </table>";
+    echo "<hr/>\n";
+}
+
+?>
+
+
