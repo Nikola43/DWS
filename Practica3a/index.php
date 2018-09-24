@@ -20,23 +20,28 @@ ej5();
 function ej1()
 {
     echo "<h1>EJ1</h1>\n";
-    $rand = rand(1, 100);
-    $digitos = strlen($rand);
-    echo "$rand tiene $digitos dígitos\n";
+    $rand = mt_rand(1, 100);
+    echo "$rand tiene " . mb_strlen($rand) . " dígitos\n";
     echo "<hr/>\n";
 }
 
 // 2. Generar un valor aleatorio entre 1 y 3. Luego imprimir en castellano el número
 // (Ej. si se genera el 3 luego mostrar en la página el string "tres").
-function ej2(){
+function ej2()
+{
     echo "<h1>EJ2</h1>\n";
-    $rand = rand(1, 3);
     $mensaje = "";
 
-    switch ($rand){
-        case 1 : $mensaje = "uno"; break;
-        case 2 : $mensaje = "dos"; break;
-        case 3 : $mensaje = "tres"; break;
+    switch (mt_rand(1, 3)) {
+        case 1 :
+            $mensaje = "uno";
+            break;
+        case 2 :
+            $mensaje = "dos";
+            break;
+        case 3 :
+            $mensaje = "tres";
+            break;
     }
     echo "<p>Número aleatorio: $mensaje</p>\n";
 
@@ -45,10 +50,11 @@ function ej2(){
 
 // 3. Generar un valor aleatorio entre 1 y 100, luego imprimir en la página
 // desde 1 hasta el valor generado (de uno en uno):
-function ej3(){
+function ej3()
+{
     echo "<h1>EJ3</h1>\n";
-    $rand = rand(1, 100);
-    for ($i = 0; $i < $rand; $i++){
+    $rand = mt_rand(1, 100);
+    for ($i = 0; $i < $rand; $i++) {
         echo "$i </br>\n";
     }
     echo "<hr/>\n";
@@ -56,12 +62,13 @@ function ej3(){
 
 //4. Mostrar la tabla de multiplicar del 2. Emplear el for, luego el while y por último
 // el do/while.La estructura for permite incrementar una variable de 2 en 2:
-function ej4(){
+function ej4()
+{
     echo "<h1>EJ4</h1>";
 
     //Usando for
     echo "<p>Usando for</p>\n";
-    for ($i = 0; $i <= 10; $i++){
+    for ($i = 1; $i <= 10; $i++) {
         echo "2 * $i = " . $i * 2 . "</br>\n";
     }
 
@@ -69,7 +76,7 @@ function ej4(){
     $i = 1;
     echo "</br>";
     echo "<p>Usando while</p>\n";
-    while ($i <= 10){
+    while ($i <= 10) {
         echo "2 * $i = " . $i * 2 . "</br>\n";
         $i++;
     }
@@ -88,43 +95,18 @@ function ej4(){
 //5. Haz una página web que muestre la fecha actual en castellano, incluyendo el día de la semana,
 // con un formato similar al siguiente: "Miércoles, 23 de octubre de 2015".
 
-function ej5(){
+function ej5()
+{
+    setlocale(LC_ALL, "Spanish");
     echo "<h1>EJ5</h1>";
 
-    $fechaActual = getdate();
-    $diaMes = $fechaActual['mday'];
-    $diaSemana = $fechaActual['wday'];
-    $mes = $fechaActual['mon'];
-    $anio = $fechaActual['year'];
-    $diaTexto = "";
-    $mesTexto = "";
-
-    switch ($diaSemana){
-        case 0 : $diaTexto = "Domingo";   break;
-        case 1 : $diaTexto = "Lunes";     break;
-        case 2 : $diaTexto = "Martes";    break;
-        case 3 : $diaTexto = "Miercoles"; break;
-        case 4 : $diaTexto = "Jueves";    break;
-        case 5 : $diaTexto = "Viernes";   break;
-        case 6 : $diaTexto = "Sabado";    break;
-    }
-
-    switch ($mes){
-        case 1 :  $mesTexto = "Enero";      break;
-        case 2 :  $mesTexto = "Febrero";    break;
-        case 3 :  $mesTexto = "Marzo";      break;
-        case 4 :  $mesTexto = "Abril";      break;
-        case 5 :  $mesTexto = "Mayo";       break;
-        case 6 :  $mesTexto = "Junio";      break;
-        case 7 :  $mesTexto = "Julio";      break;
-        case 8 :  $mesTexto = "Agosto";     break;
-        case 9 :  $mesTexto = "Septiembre"; break;
-        case 10 : $mesTexto = "Octubre";    break;
-        case 11 : $mesTexto = "Noviembre";  break;
-        case 12 : $mesTexto = "Diciembre";  break;
-    }
-
-    echo "<p>Fecha actual: $diaTexto, $diaMes de $mesTexto de $anio</p>\n";
+    echo "<p>Fecha actual: " .
+                 strftime('%A') . // %A -> Dia de la semana
+          ", " . strftime('%d') . // %e -> Dia del mes
+        " de " . strftime('%B') . // %B -> Mes del año
+        " de " . strftime('%Y') . // %Y -> Año en 4 digitos
+        "</p>\n";
     echo "<hr/>\n";
 }
+
 ?>

@@ -34,21 +34,21 @@ function ej2()
     echo "<h1>EJ2</h1>\n";
     // Mostramos cabecera de la tabla
     echo "
-    <table border=\"1\">
-        <tr>
-            <th>Euros</th>
-            <th>Pesetas</th>
-        </tr>";
+    <table border=\"1\">\n
+        <tr>\n
+            <th>Euros</th>\n
+            <th>Pesetas</th>\n
+        </tr>\n";
 
     //Mostramos la conversión
     for ($i = 1; $i <= 10; $i++) {
-        echo "<tr>";
-            echo "<td>$i</td>";
-            echo "<td>" . $i * VALOR_PESETA . "</td>";
-        echo "</tr>";
+        echo "<tr>\n";
+            echo "<td>$i</td>\n";
+            echo "<td>" . $i * VALOR_PESETA . "</td>\n";
+        echo "</tr>\n";
     }
     echo "
-    </table>";
+    </table>\n";
     echo "<hr/>\n";
 }
 
@@ -69,6 +69,7 @@ function ej3()
             echo "<tr bgcolor=\"#CCCCCC\" >\n";
         else
             echo "<tr bgcolor=\"#CCEEFF\" >\n";
+        
         echo "<td >$i</td>\n";
         echo "<td>" . $i * VALOR_PESETA . "</td>\n";
         echo "</tr>\n";
