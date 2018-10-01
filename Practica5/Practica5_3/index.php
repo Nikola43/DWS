@@ -6,17 +6,16 @@
 </head>
 <body>
 <h1>Practica 5 3</h1>
-<form title="conversor_euros_pesetas" action="index.php" method="post">
+<form title="random_select" action="index-resultados.php" method="post">
     Selecciona opcion:
     <?php
         define("SL", "</br>\n"); // Salto de linea
         $elementos = array("uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez");
 
-        $numeroElementos = mt_rand(1,4);
+        $numeroElementos = mt_rand(1,sizeof($elementos));
         $elementoSeleccionado = mt_rand(1, $numeroElementos);
 
-
-        echo "<select title=\"divisa_select\" name=\"divisa_select\">" . SL;
+        echo "<select title=\"random_select\" name=\"random_select\">" . SL;
         for ($i = 0; $i <= $numeroElementos; $i++) {
 
             $option = "<option value=";

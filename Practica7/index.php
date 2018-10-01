@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css">
     <meta charset="UTF-8">
     <title>Practica 6</title>
 </head>
@@ -12,7 +12,7 @@ define("SL", "\n</br>"); // Salto de linea
 
 // comprobamos que se mandaron los datos
 // si no se enviaron, mostramos el formulario
-if (!isset($_POST['insert'])) {
+if (!isset($_POST["insert"])) {
     echo "
     <div id=\"div_form\">
     <p>Introduzca los datos de la vivienda:</p>
@@ -20,19 +20,19 @@ if (!isset($_POST['insert'])) {
         Tipo de vivienda:
         <select title=\"tipo_vivienda_select\" name=\"tipo_vivienda_select\">
             <option value=\"piso\">Piso
-            <option VALUE=\"adosado\">Adosado
-            <option VALUE=\"chalet\">Chalet
-            <option VALUE=\"casa\">Casa
+            <option value=\"adosado\">Adosado
+            <option value=\"chalet\">Chalet
+            <option value=\"casa\">Casa
         </select>
         <br>
 
         Zona:
         <select title=\"zona_select\" name=\"zona_select\">
             <option value=\"centro\">Centro
-            <option VALUE=\"nervion\">Nervion
-            <option VALUE=\"triana\">Triana
-            <option VALUE=\"aljarafe\">Aljarafe
-            <option VALUE=\"macarena\">Macarena
+            <option value=\"nervion\">Nervion
+            <option value=\"triana\">Triana
+            <option value=\"aljarafe\">Aljarafe
+            <option value=\"macarena\">Macarena
         </select>
         <br>
 
@@ -60,6 +60,10 @@ if (!isset($_POST['insert'])) {
         <input type=\"checkbox\" title=\"extras\" name=\"extras\" value=\"piscina\">Piscina
         <input type=\"checkbox\" title=\"extras\" name=\"extras\" value=\"jardin\">Jardín
         <input type=\"checkbox\" title=\"extras\" name=\"extras\" value=\"garage\">Garage
+        <br>
+        
+        Foto:
+        <input type=\"file\" title=\"imagen\" name=\"imagen\" size='100'>
         <br>
 
         Observaciones:
@@ -90,6 +94,16 @@ if (!isset($_POST['insert'])) {
         echo "Precio $precio" . SL;
         echo "Tamaño: $tamanio" . SL;
         echo "Extras: $extras" . SL;
+
+        if (is_uploaded_file ($_FILES["imagen"]["tmp_name"]))
+        {
+            $nombreDirectorio = "fotos";
+            $id = time();
+            $nombreFichero = $id . "-" . $_FILES["imagen"]["name"];
+            move_uploaded_file ($_FILES["imagen"]["tmp_name"], $nombreDirectorio . $nombreFichero);
+            echo "Foto: $nombreFichero";
+        }
+
         echo "Observaciones: $observaciones" . SL;
     } else {
         echo "No se ha podido realizar la insercion debido a los siguientes errores: " . SL . SL;
@@ -102,6 +116,9 @@ if (!isset($_POST['insert'])) {
         }
         if (!is_numeric($tamanio)) {
             echo "El tamaño debe ser un numero" . SL;
+        }
+        if (!is_uploaded_file ($_FILES["imagen"]["tmp_name"])){
+            print ("No se ha podido subir el fichero\n");
         }
     }
 }

@@ -20,19 +20,19 @@ if (!isset($_POST['insert'])) {
         Tipo de vivienda:
         <select title=\"tipo_vivienda_select\" name=\"tipo_vivienda_select\">
             <option value=\"piso\">Piso
-            <option VALUE=\"adosado\">Adosado
-            <option VALUE=\"chalet\">Chalet
-            <option VALUE=\"casa\">Casa
+            <option value=\"adosado\">Adosado
+            <option value=\"chalet\">Chalet
+            <option value=\"casa\">Casa
         </select>
         <br>
 
         Zona:
         <select title=\"zona_select\" name=\"zona_select\">
-            <option value=\"centro\">Centro
-            <option VALUE=\"nervion\">Nervion
-            <option VALUE=\"triana\">Triana
-            <option VALUE=\"aljarafe\">Aljarafe
-            <option VALUE=\"macarena\">Macarena
+            <option value=\"centro\"><?php print $zona ; ?>
+            <option value=\"nervion\">Nervion
+            <option value=\"triana\">Triana
+            <option value=\"aljarafe\">Aljarafe
+            <option value=\"macarena\">Macarena
         </select>
         <br>
 
