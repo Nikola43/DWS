@@ -13,20 +13,10 @@ define("SL", "\n</br>"); // Salto de linea
 // comprobamos que se mandaron los datos
 // si no se enviaron, mostramos el formulario
 if (!isset($_POST["insert"])) {
-    $test = isset($_POST['direccion']) ? $_POST['direccion'] : '';
-
-    if (isset($_POST['insert']))
-    {
-        echo "existe";
-    }
-    else {
-        echo " no existe";
-    }
-
     echo "
     <div id=\"div_form\">
     <p>Introduzca los datos de la vivienda:</p>
-    <form title=\"vivienda_form\" action=\"index.php\" method=\"post\">
+    <form title=\"vivienda_form\" action=\"index.php\" method=\"post\" enctype=\"multipart/form-data\">
         Tipo de vivienda:
         <select title=\"tipo_vivienda_select\" name=\"tipo_vivienda_select\">
             <option value=\"piso\">Piso
@@ -47,7 +37,7 @@ if (!isset($_POST["insert"])) {
         <br>
 
         Dirección:
-        <input type=\"text\" title=\"direccion\" name=\"direccion\" value=\"$test\">
+        <input type=\"text\" title=\"direccion\" name=\"direccion\">
         <br>
 
         Numero de dormitorios:
@@ -73,7 +63,8 @@ if (!isset($_POST["insert"])) {
         <br>
         
         Foto:
-        <input type=\"file\" title=\"imagen\" name=\"imagen\" size='100'>
+        <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"102400\">
+        <input type=\"file\" title=\"imagen\" name=\"imagen\" size=\"44\">
         <br>
 
         Observaciones:
@@ -105,13 +96,23 @@ if (!isset($_POST["insert"])) {
         echo "Tamaño: $tamanio" . SL;
         echo "Extras: $extras" . SL;
 
-        if (is_uploaded_file ($_FILES["imagen"]["tmp_name"]))
+        if (is_uploaded_file ($_FILES['imagen']['tmp_name']))
         {
-            $nombreDirectorio = "fotos";
-            $id = time();
-            $nombreFichero = $id . "-" . $_FILES["imagen"]["name"];
-            move_uploaded_file ($_FILES["imagen"]["tmp_name"], $nombreDirectorio . $nombreFichero);
-            echo "Foto: $nombreFichero";
+            $nombreDirectorio = "fotos/";
+            $nombreFichero = $_FILES['imagen']['name'];
+            $nombreCompleto = $nombreDirectorio . $nombreFichero;
+
+            if (is_file($nombreCompleto))
+            {
+                $idUnico = time();
+                $nombreFichero = $idUnico . "-" . $nombreFichero;
+            }
+            move_uploaded_file ($_FILES['imagen']['tmp_name'],
+                $nombreDirectorio . $nombreFichero);
+
+            echo "<a href=\"$nombreCompleto\">$nombreFichero</a>" . SL;
+        } else {
+            echo "No se ha podido subir el fichero" . SL;
         }
 
         echo "Observaciones: $observaciones" . SL;
@@ -127,10 +128,6 @@ if (!isset($_POST["insert"])) {
         if (!is_numeric($tamanio)) {
             echo "El tamaño debe ser un numero" . SL;
         }
-        if (!is_uploaded_file ($_FILES["imagen"]["tmp_name"])){
-            print ("No se ha podido subir el fichero" . SL);
-        }
-
         echo "<a href=\"index.php\">Volver</a>" . SL;
 
     }
@@ -138,7 +135,6 @@ if (!isset($_POST["insert"])) {
 
 
 ?>
-
 
 
 </body>
