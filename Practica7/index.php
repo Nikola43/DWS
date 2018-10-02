@@ -13,6 +13,16 @@ define("SL", "\n</br>"); // Salto de linea
 // comprobamos que se mandaron los datos
 // si no se enviaron, mostramos el formulario
 if (!isset($_POST["insert"])) {
+    $test = isset($_POST['direccion']) ? $_POST['direccion'] : '';
+
+    if (isset($_POST['insert']))
+    {
+        echo "existe";
+    }
+    else {
+        echo " no existe";
+    }
+
     echo "
     <div id=\"div_form\">
     <p>Introduzca los datos de la vivienda:</p>
@@ -37,7 +47,7 @@ if (!isset($_POST["insert"])) {
         <br>
 
         Dirección:
-        <input type=\"text\" title=\"direccion\" name=\"direccion\">
+        <input type=\"text\" title=\"direccion\" name=\"direccion\" value=\"$test\">
         <br>
 
         Numero de dormitorios:
@@ -118,11 +128,18 @@ if (!isset($_POST["insert"])) {
             echo "El tamaño debe ser un numero" . SL;
         }
         if (!is_uploaded_file ($_FILES["imagen"]["tmp_name"])){
-            print ("No se ha podido subir el fichero\n");
+            print ("No se ha podido subir el fichero" . SL);
         }
+
+        echo "<a href=\"index.php\">Volver</a>" . SL;
+
     }
 }
+
+
 ?>
+
+
 
 </body>
 </html>
