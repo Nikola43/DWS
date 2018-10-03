@@ -46,7 +46,7 @@ if (isset($_POST["insert"])) {
         echo "Precio $precio" . SL;
         echo "Tamaño: $tamanio" . SL;
         echo "Extras: ";
-        for ($i = 0; $i < count($extras_seleccionados); $i++){
+        for ($i = 0; $i < count($extras_seleccionados); $i++) {
             echo ucfirst($extras_seleccionados[$i]) . " ";
         }
         echo SL;
@@ -89,56 +89,57 @@ if (isset($_POST["insert"])) {
             <br>
             Zona:
             <select title=\"zona_select\" name=\"zona_select\">\n";
-             for ($i = 0; $i < sizeof($zonas); $i++) {
-                 if ($zona === $zonas[$i]) {
-                     echo "\t\t\t\t<option value=\"$zonas[$i]\" selected >" . ucfirst($zonas[$i]) . "\n";
-                 } else {
-                     echo "\t\t\t\t<option value=\"$zonas[$i]\">" . ucfirst($zonas[$i]) . "\n";
-                 }
-             }
-            echo "\t\t\t</select>";
+        for ($i = 0; $i < sizeof($zonas); $i++) {
+            if ($zona === $zonas[$i]) {
+                echo "\t\t\t\t<option value=\"$zonas[$i]\" selected >" . ucfirst($zonas[$i]) . "\n";
+            } else {
+                echo "\t\t\t\t<option value=\"$zonas[$i]\">" . ucfirst($zonas[$i]) . "\n";
+            }
+        }
+        echo "\t\t\t</select>";
 
-            echo "
+        echo "
             <br >
             Dirección:
             <input type = \"text\" title=\"direccion\" name=\"direccion\" value=\"$direccion\">\n";
-            if (empty($direccion)){
-                echo "<p style=\"color:red;\">¡Debe introducir una direccion!</p>";
-            }
+        if (empty($direccion)) {
+            echo "<p style=\"color:red;\">¡Debe introducir una direccion!</p>";
+        }
 
-            echo "
+        echo "
             <br>
 
             Numero de dormitorios:\n";
-            for ($i = 0; $i < sizeof($numero_dormitorios); $i++) {
-                if ($dormitorios === $numero_dormitorios[$i]) {
-                    echo "\t\t\t\t<input type=\"radio\" title=\"numero_dormitorios\" name=\"numero_dormitorios\" value=\"$numero_dormitorios[$i]\" checked=\"checked\">" . $numero_dormitorios[$i] . "\n";
-                } else {
-                    echo "\t\t\t\t<input type=\"radio\" title=\"numero_dormitorios\" name=\"numero_dormitorios\" value=\"$numero_dormitorios[$i]\">" . $numero_dormitorios[$i] . "\n";
-                }
+        for ($i = 0; $i < sizeof($numero_dormitorios); $i++) {
+            if ($dormitorios === $numero_dormitorios[$i]) {
+                echo "\t\t\t\t<input type=\"radio\" title=\"numero_dormitorios\" name=\"numero_dormitorios\" value=\"$numero_dormitorios[$i]\" checked=\"checked\">" . $numero_dormitorios[$i] . "\n";
+            } else {
+                echo "\t\t\t\t<input type=\"radio\" title=\"numero_dormitorios\" name=\"numero_dormitorios\" value=\"$numero_dormitorios[$i]\">" . $numero_dormitorios[$i] . "\n";
             }
-            echo "
+        }
+        echo "
             <br>
     
             Precio:
             <input type=\"text\" title=\"precio\" name=\"precio\" value=\"$precio\">";
-            if (!is_numeric($precio)){
-                echo "<p style=\"color:red;\">¡El precio debe ser un valor numerico!</p>";
-            }
+        if (!is_numeric($precio)) {
+            echo "<p style=\"color:red;\">¡El precio debe ser un valor numerico!</p>";
+        }
 
-            echo "
+        echo "
             <br>
     
             Tamaño:
             <input type=\"text\" title=\"tamanio\" name=\"tamanio\" value=\"$tamanio\">\n";
-            if (!is_numeric($tamanio)){
-                echo "<p style=\"color:red;\">¡El tamaño debe ser un valor numerico!</p>";
-            }
+        if (!is_numeric($tamanio)) {
+            echo "<p style=\"color:red;\">¡El tamaño debe ser un valor numerico!</p>";
+        }
 
-            echo "
+        echo "
             <br>
-    
             Extras:\n";
+
+        if (is_array($extras_seleccionados) && count($extras_seleccionados) > 0) {
             for ($i = 0; $i < sizeof($extras); $i++) {
                 for ($j = 0; $j < sizeof($extras_seleccionados); $j++) {
                     if ($extras_seleccionados[$j] === $extras[$i]) {
@@ -148,7 +149,13 @@ if (isset($_POST["insert"])) {
                     }
                 }
             }
-            echo "
+        } else {
+            for ($i = 0; $i < sizeof($extras); $i++) {
+                echo "\t\t\t\t<input type=\"checkbox\" title=\"extras\" name=\"extras[]\" value=\"$extras[$i]\">" . ucfirst($extras[$i]) . "\n";
+            }
+        }
+
+        echo "
             <br>
             
             Foto:
