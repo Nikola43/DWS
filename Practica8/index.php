@@ -43,8 +43,6 @@ if (isset($_POST["insert"])) {
     $tamanio =              !empty($_POST['tamanio'])       ? $_POST['tamanio']          : null;
     $extras_seleccionados = !empty($_POST['extras'])        ? $_POST['extras']           : null;
     $observaciones =        !empty($_POST['observaciones']) ? $_POST['observaciones']    : null;
-    $imagen = !empty($_FILES['imagen']['tmp_name']) ? $_FILES['imagen']['tmp_name'] : null;
-
 
     // validamos los datos
     // comprobamos:
@@ -53,7 +51,7 @@ if (isset($_POST["insert"])) {
     //  * Que el tamaño sea un numero
     //  * Que el usuario haya seleccionado una imagen
     // si los datos son validos mostramos el resultado
-    if (!empty($direccion) && is_numeric($precio) && is_numeric($tamanio) && !empty($imagen)) {
+    if (!empty($direccion) && is_numeric($precio) && is_numeric($tamanio) && !empty($observaciones)) {
         echo "Datos introducidos: " . SL;
         echo "Tipo: $tipo_vivienda" . SL;
         echo "Zona: $zona" . SL;
@@ -92,189 +90,90 @@ if (isset($_POST["insert"])) {
     // mostramos el formulario con los datos que si estaban bien
     // y mostramos los errores
     else {
-        // ---------------------------------------- CABECERA FORMULARIO ------------------------------------------------
         echo "
-        <div id=\"div_form\">
-        <p>Introduzca los datos de la vivienda:</p>
-        <form title=\"vivienda_form\" action=\"index.php\" method=\"post\" enctype=\"multipart/form-data\">\n";
+    <div id=\"div_form\">
+    <p>Introduzca los datos de la vivienda:</p>
+    <form title=\"vivienda_form\" action=\"index.php\" method=\"post\" enctype=\"multipart/form-data\">
+        Tipo de vivienda:
+        <select title=\"tipo_vivienda_select\" name=\"tipo_vivienda_select\">
+            <option value=\"piso\">Piso
+            <option value=\"adosado\">Adosado
+            <option value=\"chalet\">Chalet
+            <option value=\"casa\">Casa
+        </select>
+        <br>
 
-        // SELECT VIVIENDA
-        // -------------------------------------------------------------------------------------------------------------
-        // CABECERA
-        echo "
-            Tipo de vivienda:
-            <select title=\"tipo_vivienda_select\" name=\"tipo_vivienda_select\">\n";
+        Zona:
+        <select title=\"zona_select\" name=\"zona_select\">
+            <option value=\"centro\">Centro
+            <option value=\"nervion\">Nervion
+            <option value=\"triana\">Triana
+            <option value=\"aljarafe\">Aljarafe
+            <option value=\"macarena\">Macarena
+        </select>
+        <br>
 
-        // CUERPO
-        for ($i = 0; $i < sizeof($tipos_viviendas); $i++) {
-            if ($tipo_vivienda === $tipos_viviendas[$i]) {
-                echo "\t\t\t\t<option value=\"$tipos_viviendas[$i]\" selected >" . ucfirst($tipos_viviendas[$i]) . "\n";
-            } else {
-                echo "\t\t\t\t<option value=\"$tipos_viviendas[$i]\">" . ucfirst($tipos_viviendas[$i]) . "\n";
-            }
-        }
-        echo "\t\t\t</select>";
-        // -------------------------------------------------------------------------------------------------------------
-
-        // SELECT ZONA
-        // -------------------------------------------------------------------------------------------------------------
-        // CABECERA
-        echo "
-            <br>
-            Zona:
-            <select title=\"zona_select\" name=\"zona_select\">\n";
-
-        // CUERPO
-        for ($i = 0; $i < sizeof($zonas); $i++) {
-            if ($zona === $zonas[$i]) {
-                echo "\t\t\t\t<option value=\"$zonas[$i]\" selected >" . ucfirst($zonas[$i]) . "\n";
-            } else {
-                echo "\t\t\t\t<option value=\"$zonas[$i]\">" . ucfirst($zonas[$i]) . "\n";
-            }
-        }
-        echo "\t\t\t</select>";
-
-        // DIRECCION
-        // -------------------------------------------------------------------------------------------------------------
-        echo "
-            <br>
-            Dirección:
-            <input type = \"text\" title=\"direccion\" name=\"direccion\" value=\"$direccion\">\n";
+        Dirección:
+        <input type=\"text\" title=\"direccion\" name=\"direccion\">
+        <br>\n";
 
         if (empty($direccion)) {
             echo "<p style=\"color:red;\">¡Debe introducir una direccion!</p>\n";
         }
-        // -------------------------------------------------------------------------------------------------------------
 
-        // DORMITORIOS
-        // -------------------------------------------------------------------------------------------------------------
         echo "
-            <br>
-            Numero de dormitorios:\n";
+        Numero de dormitorios:
+        <input type=\"radio\" title=\"numero_dormitorios\" name=\"numero_dormitorios\" value=\"1\" checked=\"checked\">1
+        <input type=\"radio\" title=\"numero_dormitorios\" name=\"numero_dormitorios\" value=\"2\">2
+        <input type=\"radio\" title=\"numero_dormitorios\" name=\"numero_dormitorios\" value=\"3\">3
+        <input type=\"radio\" title=\"numero_dormitorios\" name=\"numero_dormitorios\" value=\"4\">4
+        <input type=\"radio\" title=\"numero_dormitorios\" name=\"numero_dormitorios\" value=\"5\">5
+        <br>
 
-        for ($i = 0; $i < sizeof($numero_dormitorios); $i++) {
-            if ($dormitorios === $numero_dormitorios[$i]) {
-                echo "\t\t\t\t<input type=\"radio\" title=\"numero_dormitorios\" name=\"numero_dormitorios\" value=\"$numero_dormitorios[$i]\" checked=\"checked\">" . $numero_dormitorios[$i] . "\n";
-            } else {
-                echo "\t\t\t\t<input type=\"radio\" title=\"numero_dormitorios\" name=\"numero_dormitorios\" value=\"$numero_dormitorios[$i]\">" . $numero_dormitorios[$i] . "\n";
-            }
-        }
-        // -------------------------------------------------------------------------------------------------------------
-
-        // PRECIO
-        // -------------------------------------------------------------------------------------------------------------
-        echo "
-            <br>
-            Precio:
-            <input type=\"text\" title=\"precio\" name=\"precio\" value=\"$precio\">\n";
+        Precio:
+        <input type=\"text\" title=\"precio\" name=\"precio\">
+        <br>\n";
 
         if (!is_numeric($precio)) {
             echo "<p style=\"color:red;\">¡El precio debe ser un valor numerico!</p>\n";
         }
-        // -------------------------------------------------------------------------------------------------------------
 
-        // TAMAÑO
-        // -------------------------------------------------------------------------------------------------------------
         echo "
-            <br>
-            Tamaño:
-            <input type=\"text\" title=\"tamanio\" name=\"tamanio\" value=\"$tamanio\">\n";
+        Tamaño:
+        <input type=\"text\" title=\"tamanio\" name=\"tamanio\">
+        <br>\n";
 
         if (!is_numeric($tamanio)) {
             echo "<p style=\"color:red;\">¡El tamaño debe ser un valor numerico!</p>\n";
         }
-        // -------------------------------------------------------------------------------------------------------------
 
-        // EXTRAS
-        // -------------------------------------------------------------------------------------------------------------
         echo "
-            <br>
-            Extras:\n";
 
-        // Comprobamos que se ha seleccionado algun extra
-        // si la variable '$extras_seleccionados' es una array
-        // si contiene al menos un elemento
-        if (is_array($extras_seleccionados) && sizeof($extras_seleccionados) > 0) {
-            $elemento_actual = null;
+        Extras:
+        <input type=\"checkbox\" title=\"extras\" name=\"extras[]\" value=\"piscina\">Piscina
+        <input type=\"checkbox\" title=\"extras\" name=\"extras[]\" value=\"jardin\">Jardin
+        <input type=\"checkbox\" title=\"extras\" name=\"extras[]\" value=\"garaje\">Garaje
+        <br>
+        
+        Foto:
+        <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"102400\">
+        <input type=\"file\" title=\"imagen\" name=\"imagen\" size=\"44\">
+        <br>
 
-            for ($i = 0; $i < sizeof($extras); $i++) {
-                if (sizeof($extras_seleccionados) > 0){
-                    $elemento_actual = array_pop($extras_seleccionados);
-
-                    if ($extras[$i] === $elemento_actual)
-                    {
-                        echo "\t\t\t\t<input type=\"checkbox\" title=\"extras\" name=\"extras[]\" value=\"$extras[$i]\" checked=\"checked\" >" . ucfirst($extras[$i]) . "\n";
-                    }
-                    else {
-                       // echo " entra" . $extras[$i];
-                        echo "\t\t\t\t<input type=\"checkbox\" title=\"extras\" name=\"extras[]\" value=\"$extras[$i]\">" . ucfirst($extras[$i]) . "\n";
-                    }
-                }
-            }
-
-
-            /*
-
-            for ($i = 0; $i < sizeof($extras); $i++) {
-                for ($j = 0; $j < sizeof($extras_seleccionados); $j++) {
-                    if ($extras_seleccionados[$j] === $extras[$i]) {
-                        echo "\t\t\t\t<input type=\"checkbox\" title=\"extras\" name=\"extras[]\" value=\"$extras[$i]\" checked=\"checked\" >" . ucfirst($extras_seleccionados[$i]) . "\n";
-                    } else {
-                        echo "\t\t\t\t<input type=\"checkbox\" title=\"extras\" name=\"extras[]\" value=\"$extras[$i]\">" . ucfirst($extras[$i]) . "\n";
-                    }
-                }
-            }
-            */
-
-        }
-        // Si no se ha seleccionado ningun extra, mostramos la lista tal cual
-        else {
-            for ($i = 0; $i < sizeof($extras); $i++) {
-                echo "\t\t\t\t<input type=\"checkbox\" title=\"extras\" name=\"extras[]\" value=\"$extras[$i]\">" . ucfirst($extras[$i]) . "\n";
-            }
-        }
-        // -------------------------------------------------------------------------------------------------------------
-
-        // FOTO
-        // -------------------------------------------------------------------------------------------------------------
-        echo "
-            <br>
-            Foto:
-            <input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"102400\">
-            <input type=\"file\" title=\"imagen\" name=\"imagen\" size=\"44\">\n";
-
-        if (empty($imagen)) {
-            echo "<p style=\"color:red;\">¡Debe seleccionar una imagen!</p>\n";
-        }
-        // -------------------------------------------------------------------------------------------------------------
-
-        // OBSERVACIONES
-        // -------------------------------------------------------------------------------------------------------------
-        echo "
-           <br>
-            Observaciones:
-            <textarea title=\"observaciones\" name=\"observaciones\" rows=\"10\" cols=\"40\" > </textarea>\n";
-
+        Observaciones:
+        <textarea title=\"observaciones\" name=\"observaciones\" rows=\"10\" cols=\"40\"> </textarea>
+        <br>\n";
         if (empty($observaciones)) {
             echo "<p style=\"color:red;\">¡Debe introducir una objservación!</p>\n";
         }
-        // -------------------------------------------------------------------------------------------------------------
-
-        // SUBMIT
-        // -------------------------------------------------------------------------------------------------------------
-        echo "
-            <br>
-            <input title=\"insert\" type=\"submit\" name=\"insert\" value=\"Insertar vivienda\">\n";
-        // -------------------------------------------------------------------------------------------------------------
 
         echo "
-        </form>
-        </div>";
-        // ---------------------------------------- FINAL DE FORMULARIO ------------------------------------------------
+
+        <input title=\"insert\" type=\"submit\" name=\"insert\" value=\"Insertar vivienda\">
+    </form>
+    </div>\n";
 
 
-        // BOTON VOLVER ATRAS
-        // -------------------------------------------------------------------------------------------------------------
         echo "<a href=\"index.php\">Volver</a>" . SL;
     }
 } else {
