@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Practica 8</title>
+    <title>Practica 8-1</title>
 </head>
 <body>
 <h1>Inserción de vivienda</h1>
@@ -33,17 +33,17 @@ if (isset($_POST["insert"])) {
     // recogemos los datos del formulario
     // estos campos siempre tendran un valor
     $tipo_vivienda = $_POST['tipo_vivienda_select'];
-    $zona = $_POST['zona_select'];
-    $dormitorios = $_POST['numero_dormitorios'];
+    $zona =          $_POST['zona_select'];
+    $dormitorios =   $_POST['numero_dormitorios'];
 
     // para estos campos, comprobamos si tiene contenido
     // sino, los inicializamos a null
-    $direccion =            !empty($_POST['direccion'])     ? $_POST['direccion']        : null;
-    $precio =               !empty($_POST['precio'])        ? $_POST['precio']           : null;
-    $tamanio =              !empty($_POST['tamanio'])       ? $_POST['tamanio']          : null;
-    $extras_seleccionados = !empty($_POST['extras'])        ? $_POST['extras']           : null;
-    $observaciones =        !empty($_POST['observaciones']) ? $_POST['observaciones']    : null;
-    $imagen = !empty($_FILES['imagen']['tmp_name']) ? $_FILES['imagen']['tmp_name'] : null;
+    $direccion =            !empty($_POST['direccion'])           ? htmlspecialchars(trim(strip_tags($_POST['direccion'])))     : null;
+    $precio =               !empty($_POST['precio'])              ? htmlspecialchars(trim(strip_tags($_POST['precio'])))        : null;
+    $tamanio =              !empty($_POST['tamanio'])             ? htmlspecialchars(trim(strip_tags($_POST['tamanio'])))       : null;
+    $observaciones =        !empty($_POST['observaciones'])       ? htmlspecialchars(trim(strip_tags($_POST['observaciones']))) : null;
+    $extras_seleccionados = !empty($_POST['extras'])              ? $_POST['extras']                                            : null;
+    $imagen =               !empty($_FILES['imagen']['tmp_name']) ? $_FILES['imagen']['tmp_name']                               : null;
 
 
     // validamos los datos
@@ -55,19 +55,21 @@ if (isset($_POST["insert"])) {
     // si los datos son validos mostramos el resultado
     if (!empty($direccion) && is_numeric($precio) && is_numeric($tamanio) && !empty($imagen)) {
         echo "Datos introducidos: " . SL;
-        echo "Tipo: $tipo_vivienda" . SL;
-        echo "Zona: $zona" . SL;
+        echo "Tipo: " .ucfirst($tipo_vivienda) . SL;
+        echo "Zona: " .ucfirst($zona) . SL;
         echo "Dirección: $direccion" . SL;
         echo "Numero de dormitorios: $dormitorios" . SL;
         echo "Precio $precio" . SL;
         echo "Tamaño: $tamanio" . SL;
         echo "Extras: ";
-        if (is_array($extras_seleccionados)){
-            for ($i = 0; $i < count($extras_seleccionados); $i++) {
-                echo ucfirst($extras_seleccionados[$i]) . " ";
+        if (is_array($extras_seleccionados)) {
+            foreach ($extras_seleccionados as $val) {
+                echo ucfirst($val) . " ";
             }
         }
 
+        echo SL;
+        echo "Foto: ";
         // Subimos la foto al servidor
         if (is_uploaded_file($_FILES['imagen']['tmp_name'])) {
             $nombreDirectorio = "fotos/";
@@ -87,6 +89,8 @@ if (isset($_POST["insert"])) {
         }
         echo "Observaciones: $observaciones" . SL;
 
+        echo "<a href=\"index.php\">Volver</a>" . SL;
+
     }
     // Si no se han validado los datos
     // mostramos el formulario con los datos que si estaban bien
@@ -96,7 +100,7 @@ if (isset($_POST["insert"])) {
         echo "
         <div id=\"div_form\">
         <p>Introduzca los datos de la vivienda:</p>
-        <form title=\"vivienda_form\" action=\"index.php\" method=\"post\" enctype=\"multipart/form-data\">\n";
+        <form title=\"vivienda_form\" action=\"". $_SERVER['PHP_SELF'] . "\"" . " method=\"post\" enctype=\"multipart/form-data\">\n";
 
         // SELECT VIVIENDA
         // -------------------------------------------------------------------------------------------------------------
