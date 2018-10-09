@@ -1,0 +1,5 @@
+CREAR USUARIO
+CREATE USER 'alumno'@'localhost' IDENTIFIED BY 'paulo1994';
+
+ASIGNAR PERMISOS
+GRANT ALL PRIVILEGES ON *.* TO 'alumno'@'localhost';
