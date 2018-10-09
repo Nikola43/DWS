@@ -56,16 +56,11 @@ if ($lindavista_conexion_error == null) {
     }
     // cerramos la conexion una vez echa la consulta
     mysqli_close($lindavistaDB);
-
-
 } else {
     die("Conexion fallida: " . mysqli_connect_error());
 }
-
-echo "
-</tbody>
-</table>\n";
-
+echo "</tbody>\n";
+echo "</table>\n";
 ?>
 
 

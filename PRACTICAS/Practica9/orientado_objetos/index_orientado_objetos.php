@@ -58,28 +58,24 @@
                         $fila["foto"],
                         $fila["observaciones"]);
 
-                echo "<tr>";
-                echo "<td>" . $vivienda->getTipo() ."</td>\n";
-                echo "<td>" . $vivienda->getZona() ."</td>\n";
-                echo "<td>" . $vivienda->getNumeroDormitorios() ."</td>\n";
-                echo "<td>" . $vivienda->getPrecio() ."</td>\n";
-                echo "<td>" . $vivienda->getTamanio() ."</td>\n";
-                echo "<td>" . $vivienda->getExtras() ."</td>\n";
-                echo "<td>" . $vivienda->getFoto() ."</td>\n";
-                echo "<tr>";
+                echo "\t\t<tr>\n";
+                echo "\t\t\t<td>" . $vivienda->getTipo() ."</td>\n";
+                echo "\t\t\t<td>" . $vivienda->getZona() ."</td>\n";
+                echo "\t\t\t<td>" . $vivienda->getNumeroDormitorios() ."</td>\n";
+                echo "\t\t\t<td>" . $vivienda->getPrecio() ."</td>\n";
+                echo "\t\t\t<td>" . $vivienda->getTamanio() ."</td>\n";
+                echo "\t\t\t<td>" . $vivienda->getExtras() ."</td>\n";
+                echo "\t\t\t<td>" . $vivienda->getFoto() ."</td>\n";
+                echo "\t\t<tr>\n";
             }
         }
         // cerramos la conexion una vez echa la consulta
         $lindavistaDB->close();
-
-
     } else {
         die("Conexion fallida: " . $lindavistaDB->connect_error);
     }
-
-    echo "
-    </tbody>
-    </table>\n";
+    echo "</tbody>\n";
+    echo "</table>\n";
     ?>
 </body>
 </html>
