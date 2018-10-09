@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="../orientado_objetos/style.css">
     <title>Practica 9</title>
 </head>
 <body>
@@ -54,11 +54,13 @@ if ($lindavista_conexion_error == null) {
             echo "<tr>";
         }
     }
+    // cerramos la conexion una vez echa la consulta
+    mysqli_close($lindavistaDB);
+
 
 } else {
     die("Conexion fallida: " . mysqli_connect_error());
 }
-
 
 echo "
 </tbody>
