@@ -48,27 +48,27 @@ $conocimientos = array("nada", "basico", "medio", "avanzado");
 // si se mandaron, entonces procesamos el formulario
 if (isset($_POST["insert"])) {
     // recogemos los datos del formulario
-    $apellidos = !empty($_POST['apellidos']) ? htmlspecialchars(trim(strip_tags($_POST['apellidos']))) : null;
-    $nombre = !empty($_POST['nombre']) ? htmlspecialchars(trim(strip_tags($_POST['nombre']))) : null;
+    $apellidos =             POST('apellidos');
+    $nombre =                POST('nombre');
+    $fecha_nacimiento =      POST('fecha_nacimiento');
+    $telefono =              POST('telefono');
+    $domicilio =             POST('domicilio');
+    $localidad =             POST('localidad');
+    $email =                 POST('email');
+    $conocimientos_windows = POST('conocimientos_windows');
+    $conocimientos_linux =   POST('conocimientos_linux');
+    $conocimientos_mac =     POST('conocimientos_mac');
+    $otros_so =              POST('otros_so');
+    $otros_lenguajes =       POST('otros_lenguajes');
+    $otros_estudios =        POST('otros_estudios');
+    $experiencia_laboral =   POST('experiencia_laboral');
+    $puesto =                POST('puesto');
+    $horario =               POST('horario');
+    $motivo_matriculacion =  POST('motivo_matriculacion');
+    $que_espera_aprender =   POST('que_espera_aprender');
+    $repite_curso =          POST('repite_curso');
+    $estudios_realizados =   POST('estudios_realizados');
     $imagen = !empty($_FILES['imagen']['tmp_name']) ? $_FILES['imagen']['tmp_name'] : null;
-    $fecha_nacimiento = !empty($_POST['fecha_nacimiento']) ? htmlspecialchars(trim(strip_tags($_POST['fecha_nacimiento']))) : null;
-    $telefono = !empty($_POST['telefono']) ? htmlspecialchars(trim(strip_tags($_POST['telefono']))) : null;
-    $domicilio = !empty($_POST['domicilio']) ? htmlspecialchars(trim(strip_tags($_POST['domicilio']))) : null;
-    $localidad = !empty($_POST['localidad']) ? htmlspecialchars(trim(strip_tags($_POST['localidad']))) : null;
-    $email = !empty($_POST['email']) ? htmlspecialchars(trim(strip_tags($_POST['email']))) : null;
-    $conocimientos_windows = !empty($_POST['conocimientos_windows']) ? htmlspecialchars(trim(strip_tags($_POST['conocimientos_windows']))) : null;
-    $conocimientos_linux = !empty($_POST['conocimientos_linux']) ? htmlspecialchars(trim(strip_tags($_POST['conocimientos_linux']))) : null;
-    $conocimientos_mac = !empty($_POST['conocimientos_mac']) ? htmlspecialchars(trim(strip_tags($_POST['conocimientos_mac']))) : null;
-    $otros_so = !empty($_POST['$otros_so']) ? htmlspecialchars(trim(strip_tags($_POST['$otros_so']))) : null;
-    $otros_lenguajes = !empty($_POST['otros_lenguajes']) ? htmlspecialchars(trim(strip_tags($_POST['otros_lenguajes']))) : null;
-    $otros_estudios = !empty($_POST['otros_estudios']) ? htmlspecialchars(trim(strip_tags($_POST['otros_estudios']))) : null;
-    $experiencia_laboral = !empty($_POST['experiencia_laboral']) ? htmlspecialchars(trim(strip_tags($_POST['experiencia_laboral']))) : null;
-    $puesto = !empty($_POST['puesto']) ? htmlspecialchars(trim(strip_tags($_POST['puesto']))) : null;
-    $horario = !empty($_POST['horario']) ? htmlspecialchars(trim(strip_tags($_POST['horario']))) : null;
-    $motivo_matriculacion = !empty($_POST['motivo_matriculacion']) ? htmlspecialchars(trim(strip_tags($_POST['motivo_matriculacion']))) : null;
-    $que_espera_aprender = !empty($_POST['que_espera_aprender']) ? htmlspecialchars(trim(strip_tags($_POST['que_espera_aprender']))) : null;
-    $repite_curso = !empty($_POST['repite_curso']) ? $_POST['repite_curso'] : null;
-    $estudios_realizados = !empty($_POST['estudios_realizados']) ? $_POST['estudios_realizados'] : null;
 
     // VALIDAMOS DATOS
     // COMPROBAMOS
@@ -134,12 +134,9 @@ if (isset($_POST["insert"])) {
 
         // APELLIDOS
         echo "Apellidos:";
-        if (!empty($apellidos)) {
-            echo "<input type=\"text\" title=\"apellidos\" name=\"apellidos\" value=\"$apellidos\">";
-            // ASI SALE ABAJO
-            // echo "<p style=\"color:red;\">¡Debe introducir una direccion!</p>\n";
-        } else {
-            echo "<input style=\"color:red;\" type=\"text\" title=\"apellidos\" name=\"apellidos\" value=\"¡Falta una direccion!\">";
+        echo "<input type=\"text\" title=\"apellidos\" name=\"apellidos\" value=\"$apellidos\">";
+        if (empty($apellidos)) {
+            echo "<span style=\"color:red;\">¡Falta los apellidos!</span>\n";
         }
         echo "<br>";
 
@@ -148,7 +145,8 @@ if (isset($_POST["insert"])) {
         if (!empty($nombre)) {
             echo "<input type=\"text\" title=\"nombre\" name=\"nombre\" value=\"$nombre\">";
         } else {
-            echo "<input style=\"color:red;\" type=\"text\" title=\"nombre\" name=\"nombre\" value=\"¡Falta su nombre!\">";
+            echo "<input type=\"text\" title=\"nombre\" name=\"nombre\">";
+            echo "<span style=\"color:red;\">¡Falta el nombre!</span>\n";
         }
         echo "<br>";
 
@@ -164,7 +162,8 @@ if (isset($_POST["insert"])) {
         if (!empty($fecha_nacimiento)) {
             echo "<input type=\"text\" title=\"fecha_nacimiento\" name=\"fecha_nacimiento\" value=\"$fecha_nacimiento\">";
         } else {
-            echo "<input style=\"color:red;\" type=\"text\" title=\"fecha_nacimiento\" name=\"fecha_nacimiento\" value=\"¡Falta fecha de nacimiento!\">";
+            echo "<input type=\"text\" title=\"fecha_nacimiento\" name=\"fecha_nacimiento\">";
+            echo "<span style=\"color:red;\">¡Falta fecha de nacimiento!</span>\n";
         }
         echo "<br>";
 
@@ -211,7 +210,9 @@ if (isset($_POST["insert"])) {
         Estudios realizados:
         <select title=\"estudios_realizados\" name=\"estudios_realizados\">\n";
         for ($i = 0; $i < sizeof($lista_estudios_realizados); $i++) {
+            echo $estudios_realizados . "  " . $i;
             if ($i === $estudios_realizados) {
+                echo " fdgdfgdfgdfgdgdfg";
                 echo "\t\t\t\t<option value=\"$i\" selected >" . ucfirst($lista_estudios_realizados[$i]) . "\n";
             } else {
                 echo "\t\t\t\t<option value=\"$i\">" . ucfirst($lista_estudios_realizados[$i]) . "\n";
@@ -285,7 +286,7 @@ if (isset($_POST["insert"])) {
 } else {
     echo "
     <div id=\"div_form\">
-    <form title=\"evaluacion\" action=\"index.php\" method=\"post\" enctype=\"multipart/form-data\">
+    <form title=\"evaluacion\" action=\"" . $_SERVER['PHP_SELF'] . "\" method=\"post\" enctype=\"multipart/form-data\">
         Apellidos:
         <input type=\"text\" title=\"apellidos\" name=\"apellidos\">
         <br>
@@ -368,6 +369,11 @@ if (isset($_POST["insert"])) {
         </form>
         </div>\n";
 }
+
+function POST($nombre){
+    return(!empty($_POST[$nombre]) ? htmlspecialchars(trim(strip_tags($_POST[$nombre]))) : null);
+}
+
 ?>
 </body>
 </html>
