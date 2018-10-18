@@ -53,7 +53,7 @@ if (isset($_POST["insert"])) {
     $telefono =              POST('telefono');
     $domicilio =             POST('domicilio');
     $localidad =             POST('localidad');
-    $email =                 POST('email');
+    $email =                 POST('email'); //!empty($_POST['email']) ? $_POST['email'] : null;
     $conocimientos_windows = POST('conocimientos_windows');
     $conocimientos_linux =   POST('conocimientos_linux');
     $conocimientos_mac =     POST('conocimientos_mac');
@@ -83,10 +83,10 @@ if (isset($_POST["insert"])) {
     if (!empty($apellidos)
         && !empty($nombre)
         && !empty($fecha_nacimiento)
-        && !empty($telefono) && preg_match("/^[0-9]{9}$/", $telefono)
+        && !empty($telefono) && preg_match('/[0-9]{9}/i', $telefono)
         && !empty($domicilio)
         && !empty($localidad)
-        && !empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)
+        && !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL)
         && !empty($repite_curso)
         && !empty($conocimientos_windows)
         && !empty($conocimientos_linux)
@@ -141,6 +141,8 @@ if (isset($_POST["insert"])) {
                                 <input type=\"text\" name=\"apellidos\" value=\"$apellidos\">\n";
                                 if (empty($apellidos))
                                     echo "<span style='color:red'> <br> ¡Se requiere los apellidos!!</span>";
+                                if (!empty($apellidos) && !preg_match('/[^a-zA-Z]/', $apellidos))
+                                    echo "<span style='color:red'> <br> ¡El nombre no es válido</span>";
                             echo "
                             </td>
                         </tr>
@@ -149,7 +151,7 @@ if (isset($_POST["insert"])) {
                                 Nombre:
                             </td>
                             <td>
-                                <input type=\"text\" name=\"nombre\">\n";
+                                <input type=\"text\" name=\"nombre\" value=\"$nombre\">\n";
                                 if (empty($nombre))
                                     echo "<span style='color:red'> <br> ¡Se requiere el nombre!!</span>";
                             echo "
@@ -174,7 +176,7 @@ if (isset($_POST["insert"])) {
                             <input type=\"text\" name=\"fecha_nacimiento\" value=\"$fecha_nacimiento\">\n";
                                 if (empty($fecha_nacimiento))
                                     echo "<span style='color:red'> <br> ¡Se requiere la fecha de nacimiento!!</span>";
-                                if (!empty($fecha_nacimiento) && false)
+                                if (!empty($fecha_nacimiento) && !checkdate(explode("/", $fecha_nacimiento)[1], explode("/", $fecha_nacimiento)[0], explode("/", $fecha_nacimiento)[2]))
                                     echo "<span style='color:red'> <br> ¡La fecha no es valida</span>";
                             echo "
                             </td>
@@ -198,8 +200,8 @@ if (isset($_POST["insert"])) {
                                 <input type=\"teaxt\" name=\"telefono\" maxlength=\"50\" value=\"$telefono\">\n";
                                 if (empty($telefono))
                                     echo "<span style='color:red'> <br> ¡Se requiere telefono</span>";
-                                if (!empty($telefono) && !preg_match("/^[0-9]{9}$/", $telefono))
-                                    echo "<span style='color:red'> <br> ¡Se requiere telefono</span>";
+                                if (!empty($telefono) && !preg_match('/[0-9]{9}/i', $telefono))
+                                    echo "<span style='color:red'> <br> ¡El telefono no es válido</span>";
                             echo "
                             </td>
                         </tr>
@@ -219,7 +221,7 @@ if (isset($_POST["insert"])) {
                                 E_mail:
                             </td>
                             <td>
-                                <input type=\"text\" name=\"email\" value=\"\">\n";
+                                <input type=\"text\" name=\"email\" value=\"$email\">\n";
                                 if (empty($email))
                                     echo "<span style='color:red'> <br> ¡Se requiere email</span>";
                                 if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL))
@@ -232,10 +234,8 @@ if (isset($_POST["insert"])) {
                         </td>
                         <td>\n";
                             echo "<select title=\"estudios_realizados\" name=\"estudios_realizados\">\n";
-                            for ($i = 0; $i < sizeof($lista_estudios_realizados); $i++) {
-                                echo $estudios_realizados . "  " . $i;
+                            for ($i = 1; $i < sizeof($lista_estudios_realizados); $i++) {
                                 if ($i === $estudios_realizados) {
-                                    echo " fdgdfgdfgdfgdgdfg";
                                     echo "\t\t\t\t<option value=\"$i\" selected >" . ucfirst($lista_estudios_realizados[$i]) . "\n";
                                 } else {
                                     echo "\t\t\t\t<option value=\"$i\">" . ucfirst($lista_estudios_realizados[$i]) . "\n";
@@ -248,7 +248,7 @@ if (isset($_POST["insert"])) {
                                 Otros estudios:
                             </td>
                             <td>
-                                <textarea title=\"otros_estudios\" name=\"otros_estudios\" rows=\"10\" cols=\"40\" > </textarea>\n";
+                                <textarea title=\"otros_estudios\" name=\"otros_estudios\" rows=\"10\" cols=\"40\">$otros_estudios</textarea>\n";
                                 if (empty($otros_estudios))
                                     echo "<span style='color:red'> <br> ¡Se requiere otros estudios</span>";
                             echo "
@@ -278,7 +278,7 @@ if (isset($_POST["insert"])) {
                                 Conocimiento Operativo Windows:
                             </td>
                             <td>\n";
-                            for ($i = 0; $i < sizeof($conocimientos); $i++) {
+                            for ($i = 1; $i < sizeof($conocimientos); $i++) {
                                 if ($conocimientos[$i] === $conocimientos_windows) {
                                     echo "\t\t\t\t<input type=\"radio\" title=\"conocimientos_windows\" name=\"conocimientos_windows\" value=\"$conocimientos[$i]\" checked=\"checked\">" . ucfirst($conocimientos[$i]) . "\n";
                                 } else {
@@ -329,7 +329,7 @@ if (isset($_POST["insert"])) {
                                 Otros Sistemas operativos:
                             </td>
                             <td>
-                                <textarea title=\"otros_so\" name=\"otros_so\" rows=\"10\" cols=\"40\"> </textarea>\n";
+                                <textarea title=\"otros_so\" name=\"otros_so\" rows=\"10\" cols=\"40\">$otros_so</textarea>\n";
                                 if (empty($otros_so))
                                     echo "<span style='color:red'> <br> ¡Se requiere otros sistemas operativos</span>";
                             echo "
@@ -337,7 +337,7 @@ if (isset($_POST["insert"])) {
                         </tr>
                         <tr>
                             <td>
-                                <input type=\"submit\" name=\"insertar\" value=\"Insertar Datos\">
+                                <input type=\"submit\" name=\"insert\" value=\"Insertar Datos\">
                             </td>
                         </tr>
                     </table>
@@ -379,7 +379,7 @@ if (isset($_POST["insert"])) {
                         Fecha de nacimiento:
                     </td>
                     <td>
-                        <input type=\"text\" name=\"fecha_nacimiento\" value = \"\">
+                        <input type=\"text\" name=\"fecha_nacimiento\">
                     </td>
                 </tr>
                 <tr>
@@ -387,7 +387,7 @@ if (isset($_POST["insert"])) {
                         Domicilio
                     </td>
                     <td>
-                        <input type=\"text\" name=\"domicilio\" maxlength=\"50\" value=\"\">
+                        <input type=\"text\" name=\"domicilio\" maxlength=\"50\">
                     </td>
                 </tr>
                 <tr>
@@ -395,7 +395,7 @@ if (isset($_POST["insert"])) {
                         Telefono:
                     </td>
                     <td>
-                        <input type=\"teaxt\" name=\"telefono\" maxlength=\"50\" value=\"\" pattern=\"[0-9]{9}\">
+                        <input type=\"teaxt\" name=\"telefono\" maxlength=\"50\">
                     </td>
                 </tr>
                 <tr>
@@ -403,7 +403,7 @@ if (isset($_POST["insert"])) {
                         Localidad
                     </td>
                     <td>
-                        <input type=\"text\" name=\"localidad\" maxlength=\"100\" value=\"\">
+                        <input type=\"text\" name=\"localidad\" maxlength=\"100\">
                     </td>
                 </tr>
                 <tr>
