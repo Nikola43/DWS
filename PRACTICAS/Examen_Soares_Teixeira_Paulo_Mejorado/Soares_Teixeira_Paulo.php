@@ -25,12 +25,6 @@ $conocimientos_mac = null;
 $otros_so = null;
 $otros_lenguajes = null;
 $otros_estudios = null;
-$experiencia_laboral = null;
-$trabajador = null;
-$puesto = null;
-$horario = null;
-$motivo_matriculacion = null;
-$que_espera_aprender = null;
 
 // valores para el campo de estudios realizados
 $lista_estudios_realizados = array(
@@ -53,20 +47,14 @@ if (isset($_POST["insert"])) {
     $telefono =              POST('telefono');
     $domicilio =             POST('domicilio');
     $localidad =             POST('localidad');
-    $email =                 POST('email'); //!empty($_POST['email']) ? $_POST['email'] : null;
-    $conocimientos_windows = POST('conocimientos_windows');
-    $conocimientos_linux =   POST('conocimientos_linux');
-    $conocimientos_mac =     POST('conocimientos_mac');
-    $otros_so =              POST('otros_so');
-    $otros_lenguajes =       POST('otros_lenguajes');
+    $email =                 POST('email');
+    $estudios_realizados =   !empty($_POST['estudios_realizados']) ? $_POST['estudios_realizados'] : null;
     $otros_estudios =        POST('otros_estudios');
-    $experiencia_laboral =   POST('experiencia_laboral');
-    $puesto =                POST('puesto');
-    $horario =               POST('horario');
-    $motivo_matriculacion =  POST('motivo_matriculacion');
-    $que_espera_aprender =   POST('que_espera_aprender');
-    $repite_curso =          POST('repite_curso');
-    $estudios_realizados =   POST('estudios_realizados');
+    $repite_curso =          !empty($_POST['repite_curso']) ? $_POST['repite_curso'] : null;
+    $conocimientos_windows = !empty($_POST['conocimientos_windows']) ? $_POST['conocimientos_windows'] : null;
+    $conocimientos_linux =   !empty($_POST['conocimientos_linux']) ? $_POST['conocimientos_linux'] : null;
+    $conocimientos_mac =     !empty($_POST['conocimientos_mac']) ? $_POST['conocimientos_mac'] : null;
+    $otros_so =              POST('otros_so');
     $imagen = !empty($_FILES['imagen']['tmp_name']) ? $_FILES['imagen']['tmp_name'] : null;
 
     // VALIDAMOS DATOS
@@ -497,7 +485,7 @@ if (isset($_POST["insert"])) {
 
 function POST($nombre){
     $respuesta = $_POST[$nombre];
-    return(!empty($respuesta)? htmlspecialchars(trim(strip_tags($respuesta))) : null);
+    return(!empty($respuesta) ? htmlspecialchars(trim(strip_tags($respuesta))) : null);
 }
 
 ?>
