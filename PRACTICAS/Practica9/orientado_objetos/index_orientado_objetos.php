@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8"/>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="../style.css">
     <title>Practica 9</title>
 </head>
 <body>
@@ -31,6 +31,8 @@
     // creamos la conexion
     $lindavistaDB = new mysqli($servidor, $usuario, $contrasena, $base_datos);
     $lindavista_conexion_error = $lindavistaDB->connect_errno;
+
+    $lindavistaDB->set_charset("utf8");
 
     // comprobamos la conexion
     // si devuelve null, significa que no hay ningun error en la conexion
@@ -65,7 +67,7 @@
                 echo "\t\t\t<td>" . $vivienda->getPrecio() ."</td>\n";
                 echo "\t\t\t<td>" . $vivienda->getTamanio() ."</td>\n";
                 echo "\t\t\t<td>" . $vivienda->getExtras() ."</td>\n";
-                echo "\t\t\t<td>" . $vivienda->getFoto() ."</td>\n";
+                echo "\t\t\t<td>" . "<a href=\"" . $vivienda->getFoto() . "\"> <img src=\"../imagenes/ico-fichero.png\" title=\"imagen\" name=\"imagen\">" ."<a/></td>\n";
                 echo "\t\t<tr>\n";
             }
         }

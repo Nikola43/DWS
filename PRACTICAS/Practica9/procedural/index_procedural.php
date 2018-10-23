@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../orientado_objetos/style.css">
+    <link rel="stylesheet" type="text/css" href="../style.css">
     <title>Practica 9</title>
 </head>
 <body>
@@ -20,7 +20,7 @@
     </tr>
     </thead>
     <tbody>
-<?php
+    <?php
 // credenciales de conexion
 $servidor = "localhost";
 $usuario = "alumno";
@@ -30,6 +30,8 @@ $base_datos = "lindavista";
 // creamos la conexion
 $lindavistaDB = mysqli_connect($servidor, $usuario, $contrasena, $base_datos);
 $lindavista_conexion_error = $lindavistaDB->connect_errno;
+
+mysqli_set_charset($lindavistaDB, 'uft8');
 
 // comprobamos la conexion
 // si devuelve null, significa que no hay ningun error en la conexion
@@ -50,7 +52,7 @@ if ($lindavista_conexion_error == null) {
             echo "<td>" . $fila["precio"] ."</td>\n";
             echo "<td>" . $fila["tamano"] ."</td>\n";
             echo "<td>" . $fila["extras"] ."</td>\n";
-            echo "<td>" . $fila["foto"] ."</td>\n";
+            echo "<td>" . "<a href=\"" . $fila["foto"] . "\"> <img src=\"../imagenes/ico-fichero.png\" title=\"imagen\" name=\"imagen\">" ."<a/></td>\n";
             echo "<tr>";
         }
     }
