@@ -22,11 +22,11 @@ $imagen =        null;
 $imagen_nombre = null;
 $observaciones = null;
 
-// valores campos formulario select y radio button
-$tipos_viviendas =    array("piso", "adosado", "chalet", "casa");
-$zonas =              array("centro", "nervion", "triana", "aljarafe", "macarena");
-$numero_dormitorios = array("1", "2", "3", "4", "5");
-$extras =             array("piscina", "jardin", "garaje");
+// valores campos formulario
+$tipos_viviendas =    recoger_valores_campos_formulario("tipo");
+$zonas =              recoger_valores_campos_formulario("zona");
+$numero_dormitorios = recoger_valores_campos_formulario("ndormitorios");
+$extras =             recoger_valores_campos_formulario("extras");
 
 // comprobamos si se mandaron los datos
 if (isset($_POST["insert"])) {
@@ -49,19 +49,9 @@ if (isset($_POST["insert"])) {
     //  * Que el usuario haya seleccionado una imagen
     // si los datos son validos mostramos el resultado
     if (!empty($direccion) && is_numeric($precio) && is_numeric($tamanio) && !empty($imagen)) {
-        echo "Datos introducidos: " . SL;
-        echo "Tipo: " .ucfirst($tipo_vivienda) . SL;
-        echo "Zona: " .ucfirst($zona) . SL;
-        echo "Dirección: $direccion" . SL;
-        echo "Numero de dormitorios: $dormitorios" . SL;
-        echo "Precio $precio" . SL;
-        echo "Tamaño: $tamanio" . SL;
-        echo "Extras: ";
+        // Convertimis el array en string
         if (is_array($extras_seleccionados)) {
             for ($i=0; $i < count($extras_seleccionados); $i++){
-                echo ucfirst($extras_seleccionados[$i]) . " ";
-
-                // Convertimis el array en string
                 $extras_string .= $extras_seleccionados[$i];
                 if ($i < count($extras_seleccionados) - 1){
                     $extras_string .= ",";
@@ -69,11 +59,9 @@ if (isset($_POST["insert"])) {
             }
         }
 
-        echo SL;
-        echo "Foto: ";
         // Subimos la foto al servidor
         if (is_uploaded_file($_FILES['imagen']['tmp_name'])) {
-            $nombreDirectorio = "fotos/";
+            $nombreDirectorio = "imagenes/";
             $nombreFichero = $_FILES['imagen']['name'];
             $imagen_nombre = $nombreDirectorio . $nombreFichero;
 
@@ -83,12 +71,9 @@ if (isset($_POST["insert"])) {
             }
             move_uploaded_file($_FILES['imagen']['tmp_name'],
                 $nombreDirectorio . $nombreFichero);
-
-            echo "<a href=\"$imagen_nombre\">$nombreFichero</a>" . SL;
         } else {
             echo "No se ha podido subir el fichero" . SL;
         }
-        echo "Observaciones: $observaciones" . SL;
 
         // inserción tabla
         // credenciales de conexion
@@ -105,6 +90,9 @@ if (isset($_POST["insert"])) {
         // si devuelve null, significa que no hay ningun error en la conexion
         // lo tanto nos hemos conectado correctamente
         if ($lindavista_conexion_error == null) {
+            $lindavistaDB->set_charset("utf8");
+
+
             $sql = "INSERT INTO viviendas (tipo, zona, direccion, ndormitorios, precio, tamano, extras, foto, observaciones) 
                     VALUES ('$tipo_vivienda', '$zona', '$direccion', '$dormitorios', '$precio', '$tamanio', '$extras_string', '$imagen_nombre', '$observaciones')";
 
@@ -117,8 +105,8 @@ if (isset($_POST["insert"])) {
             $lindavistaDB->close();
         }
 
-        echo "<a href=\"index.php\">Insertar otra vivienda</a>" . SL;
-
+        header("Location: index_orientado_objetos.php");
+        exit();
     }
     // Si no se han validado los datos
     // mostramos el formulario con los datos que si estaban bien
@@ -381,14 +369,14 @@ function POST($nombre){
     return(!empty($respuesta) ? htmlspecialchars(trim(strip_tags($respuesta))) : null);
 }
 
-function recoger_valores_campos_formulario()
+function recoger_valores_campos_formulario($campo)
 {
-    // inserción tabla
     // credenciales de conexion
     $servidor = "localhost";
     $usuario = "alumno";
     $contrasena = "paulo1994";
     $base_datos = "lindavista";
+    $lista = null;
 
     // creamos la conexion
     $lindavistaDB = new mysqli($servidor, $usuario, $contrasena, $base_datos);
@@ -398,19 +386,28 @@ function recoger_valores_campos_formulario()
     // si devuelve null, significa que no hay ningun error en la conexion
     // lo tanto nos hemos conectado correctamente
     if ($lindavista_conexion_error == null) {
-        $sql = "SHOW columns FROM viviendas LIKE 'tipo'";
+        $lindavistaDB->set_charset("utf8");
+        $sql = "SHOW columns FROM viviendas LIKE '$campo'";
 
-        if ($lindavistaDB->query($sql)) {
-            echo "<br>\nVivienda insertada correctamente\n<br>";
-        } else {
-            echo "Error: " . $sql . "<br>" . $lindavistaDB->error;
+        // Obtener los valores del tipo enumerado
+        $consulta = $lindavistaDB->query($sql);
+        $row = mysqli_fetch_array ($consulta);
+
+        // Pasar los valores a una tabla
+        $lis = strstr ($row[1], "(");
+        $lis = ltrim($lis, "(");
+        $lis = rtrim ($lis, ")");
+        $lista = explode (",", $lis);
+
+        for ($i=0; $i < count($lista); $i++){
+            $lista[$i] = ltrim($lista[$i], "'");
+            $lista[$i] = rtrim($lista[$i], "'");
         }
 
         $lindavistaDB->close();
     }
+    return $lista;
 }
-
-
 ?>
 </body>
 </html>
