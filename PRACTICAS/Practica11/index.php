@@ -29,8 +29,8 @@ if (isset($_POST["borrar_button"])) {
     $lista_viviendas = array();
     $lista_viviendas_borradas = !empty($_POST['borrar']) ? $_POST['borrar'] : null;
 
-    for ($i = 0; $i < count($lista_viviendas_borradas); $i++){
-        echo $lista_viviendas_borradas[$i]. "<br>\n";
+    for ($i = 0; $i < count($lista_viviendas_borradas); $i++) {
+        echo $lista_viviendas_borradas[$i] . "<br>\n";
         array_push($lista_viviendas, get_vivienda_by_id($lista_viviendas_borradas[$i]));
     }
 
@@ -44,45 +44,16 @@ if (isset($_POST["borrar_button"])) {
         echo "Precio:" . $lista_viviendas[$i]->getPrecio() . SL;
         echo "Tamaño:" . $lista_viviendas[$i]->getTamanio() . SL;
         echo "Extras:" . $lista_viviendas[$i]->getExtras() . SL;
-
-        if (is_array($extras_seleccionados)) {
-            foreach ($extras_seleccionados as $val) {
-                echo ucfirst($val) . " ";
-            }
-        }
-
-        echo SL;
-        echo "Foto: ";
-        // Subimos la foto al servidor
-        if (!empty($_FILES['imagen']) && is_uploaded_file($_FILES['imagen']['tmp_name'])) {
-            $nombreDirectorio = "fotos/";
-            $nombreFichero = $_FILES['imagen']['name'];
-            $nombreCompleto = $nombreDirectorio . $nombreFichero;
-
-            if (is_file($nombreCompleto)) {
-                $idUnico = time();
-                $nombreFichero = $idUnico . "-" . $nombreFichero;
-            }
-            move_uploaded_file($_FILES['imagen']['tmp_name'],
-                $nombreDirectorio . $nombreFichero);
-
-            echo "<a href=\"$nombreCompleto\">$nombreFichero</a>" . SL;
-        } else {
-            echo "No se ha podido subir el fichero" . SL;
-        }
-        echo "Observaciones: $observaciones" . SL;
-
-        /*
-        if (eliminar_vivienda($_POST['borrar'])) {
-            $resultado = true;
-            echo "Vivienda eliminada correctamente" . SL;
-        } else {
-            echo "Error eliminando la vivienda" . SL;
-        }
-        */
+        echo "Foto:" . $lista_viviendas[$i]->getFoto() . SL . SL;
     }
 
-    echo "<a href=\"index.php\">Volver</a>" . SL;
+    if (eliminar_vivienda($_POST['borrar'])) {
+        echo "<span style=\"color:green;font-weight:bold\">Vivienda eliminada correctamente</span>" . SL . SL;
+    } else {
+        echo "<span style=\"color:red;font-weight:bold\">Error Eliminando vivienda</span>" . SL . SL;
+    }
+
+    echo "<a href=\"index.php\">Eliminar mas viviendas</a>" . SL;
 } else {
     echo "<h1>Consulta de viviendas</h1>
         <form title=\"vivienda_form\" action=\"" . $_SERVER['PHP_SELF'] . "\"" . " method=\"post\" enctype=\"multipart/form-data\">
@@ -123,34 +94,51 @@ if (isset($_POST["borrar_button"])) {
     echo "</form>\n";
 }
 
-function get_vivienda_by_id($id) {
-    // credenciales de conexion
+function get_nombres_columnas($servidor, $usuario, $contrasena, $base_datos, $nombreTabla){
+    $lindavistaDB = new mysqli($servidor, $usuario, $contrasena, $base_datos);
+    $columnas = null;
+
+    if ($lindavistaDB->connect_error) {
+        die("Connection failed: " . $lindavistaDB->connect_error);
+    } else {
+        $lindavistaDB->set_charset("utf8");
+        $resultado = $lindavistaDB->query("SHOW COLUMNS FROM " . $nombreTabla);
+        if (!$resultado) {
+            echo 'No se pudo ejecutar la consulta: ' . mysql_error();
+        } else {
+            $columnas = array();
+            if ($resultado->num_rows > 0) {
+                while ($fila = $resultado->fetch_assoc()) {
+                    array_push($columnas, $fila['Field']);
+                }
+            }
+        }
+        $lindavistaDB->close();
+    }
+
+    return $columnas;
+}
+
+
+function get_vivienda_by_id($id)
+{
     $servidor = "localhost";
     $usuario = "alumno";
     $contrasena = "paulo1994";
     $base_datos = "lindavista";
+
+    $lindavistaDB = new mysqli($servidor, $usuario, $contrasena, $base_datos);
     $vivienda = null;
 
-    // creamos la conexion
-    $lindavistaDB = new mysqli($servidor, $usuario, $contrasena, $base_datos);
-    $lindavista_conexion_error = $lindavistaDB->connect_errno;
-
-    $lindavistaDB->set_charset("utf8");
-
-    // comprobamos la conexion
-    // si devuelve null, significa que no hay ningun error en la conexion
-    // lo tanto nos hemos conectado correctamente
-
-    if ($lindavista_conexion_error == null) {
-        // procedemos a realizar la consulta
+    if ($lindavistaDB->connect_error) {
+        die("Connection failed: " . $lindavistaDB->connect_error);
+    } else {
+        $lindavistaDB->set_charset("utf8");
         $consulta = "SELECT * FROM viviendas WHERE id = $id";
         $resultado_consulta = $lindavistaDB->query($consulta);
 
-        // si el resultado de la consulta nos devuele al menos 1 fila
         if ($resultado_consulta->num_rows > 0) {
-            // recorremos todas las filas
             while ($fila = $resultado_consulta->fetch_assoc()) {
-                // Creamos una nueva instancia del objeto vivienda con los resultados de la consulta
                 $vivienda = new Vivienda(
                     $fila["id"],
                     $fila["tipo"],
@@ -168,33 +156,26 @@ function get_vivienda_by_id($id) {
     return $vivienda;
 }
 
-function get_viviendas() {
-    // credenciales de conexion
+function get_viviendas()
+{
     $servidor = "localhost";
     $usuario = "alumno";
     $contrasena = "paulo1994";
     $base_datos = "lindavista";
-    $viviendas = array();
 
-    // creamos la conexion
     $lindavistaDB = new mysqli($servidor, $usuario, $contrasena, $base_datos);
-    $lindavista_conexion_error = $lindavistaDB->connect_errno;
+    $viviendas = null;
 
-    $lindavistaDB->set_charset("utf8");
-
-    // comprobamos la conexion
-    // si devuelve null, significa que no hay ningun error en la conexion
-    // lo tanto nos hemos conectado correctamente
-    if ($lindavista_conexion_error == null) {
-        // procedemos a realizar la consulta
+    if ($lindavistaDB->connect_error) {
+        die("Connection failed: " . $lindavistaDB->connect_error);
+    } else {
+        $lindavistaDB->set_charset("utf8");
         $consulta = "SELECT * FROM viviendas";
         $resultado_consulta = $lindavistaDB->query($consulta);
 
-        // si el resultado de la consulta nos devuele al menos 1 fila
         if ($resultado_consulta->num_rows > 0) {
-            // recorremos todas las filas
+            $viviendas = array();
             while ($fila = $resultado_consulta->fetch_assoc()) {
-                // Creamos una nueva instancia del objeto vivienda con los resultados de la consulta
                 $vivienda = new Vivienda(
                     $fila["id"],
                     $fila["tipo"],
@@ -214,30 +195,22 @@ function get_viviendas() {
     return $viviendas;
 }
 
-function eliminar_vivienda($array_viviendas)
-{
-    $resultado = false;
+function eliminar_vivienda($array_viviendas){
     $servidor = "localhost";
     $usuario = "alumno";
     $contrasena = "paulo1994";
     $base_datos = "lindavista";
 
     $lista_viviendas = implode(",", $array_viviendas);
-
     $conn = new mysqli($servidor, $usuario, $contrasena, $base_datos);
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
+    } else {
+        $sql = "DELETE FROM viviendas WHERE id IN " . "($lista_viviendas)";
+        $resultado = $conn->query($sql);
+        $conn->close();
     }
-
-    // sql to delete a record
-    $sql = "DELETE FROM viviendas WHERE id IN " . "($lista_viviendas)";
-
-    if ($conn->query($sql) === true) {
-        $resultado = true;
-    }
-
-    $conn->close();
     return $resultado;
 }
 
