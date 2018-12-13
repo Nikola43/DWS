@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    
+    <title>Examen 3. 1ª Evaluación. DWEC</title>
+    
+		<style>
+		fieldset{
+			width: 400px;
+			margin-top: 2em;
+			margin-bottom: 1em;
+			margin-left: 1em;
+		}
+		
+		fieldset label{
+			width: 4.5em;
+			display: inline-block;
+		}
+		
+		</style>
+		
+
+    <script type="text/javascript">
+    
+      
+    </script>
+  </head>
+  
+  <body>
+  	
+    <h2>Examen 3. 1ª Evaluación. DWEC</h2>
+    <h3>Consulta de Facturas</h3>
+    <div>
+    	<p>
+		    <select id="factura">
+		    	<option value="-1">Selecciona una factura para consultar su detalle</option>
+		    </select>
+    	</p>
+    </div>
+    <div>
+    	Detalle de la factura:
+    	<p>
+		    <table id="detalle" border="1">
+		    	<thead>
+		    		<tr>
+		    			<th>ID</th>
+		    			<th>CANTIDAD</th>
+		    			<th>CONCEPTO</th>
+		    			<th>PRECIO</th>
+		    			<th>Tipo IVA</th>
+		    			<th>IVA</th>
+		    			<th>TOTAL</th>
+		    		</tr>
+		    	</thead>
+					
+					
+		    	<tbody id="filas_tabla">
+		    		
+						
+		    	</tbody>
+					
+					
+		    	<tfoot>
+		    		<tr>
+		    			<td colspan="5">TOTALES: </td>
+		    			<td id="Tiva">suma iva</td>
+		    			<td id="Ttotal">suma TOTAL</td>
+		    		</tr>
+		    	</tfoot>
+		    </table>
+    	</p>
+    </div>
+		
+		<div>
+			<fieldset>
+				<legend>Añadir detalle</legend>
+				<p>
+					<label for="cantidad">Cantidad: </label>
+					<input type="text" id="cantidad" size="3" value="4" />
+				</p>
+				<p>
+					<label for="concepto">Concepto: </label>
+					<input type="text" id="concepto" size="44" value="Nuevo detalle" />
+				</p>
+				<p>
+					<label for="precio">precio: </label>
+					<input type="text" id="precio" size="4" value="25" /> €
+				</p>
+				
+				<p>
+					<label for="tipo_iva">Tipo IVA: </label>
+					<input type="text" id="tipo_iva" size="2" value="21" /> %
+				</p>
+			
+			</fieldset>
+			
+			<button id="btAnade">Añadir línea de detalle</button>
+		
+		</div>
+    
+  </body>
+</html>

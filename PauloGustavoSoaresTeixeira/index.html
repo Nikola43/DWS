@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    
+    <title>Examen 3. 1ª Evaluación. DWEC</title>
+    
+		<style>
+		fieldset{
+			width: 400px;
+			margin-top: 2em;
+			margin-bottom: 1em;
+			margin-left: 1em;
+		}
+		
+		fieldset label{
+			width: 4.5em;
+			display: inline-block;
+		}
+		
+		</style>
+
+    <script type="text/javascript" src="utilidad_pAJAX.js"></script>
+
+      <script type="text/javascript">
+
+          // creamos una instancia del objeto paJAX para realizar las peticiones
+          var httpRequest = new paJAX();
+
+          window.onload = function () {
+              // cuando carga la página rellenamos el select
+              peticionRellenaSelect();
+
+              // pintamos la tabla cada vez que se cambia la opcion seleccionda en el select
+              document.getElementById("factura").onchange = function () {
+                  peticionRellenaTabla(this.value)
+              };
+
+              document.getElementById("btAnade").onclick = insertarDetalle;
+          };
+
+          // realiza la peticion al servidor, con los datos que recibe, rellena el select
+          function peticionRellenaSelect() {
+              httpRequest.peticion("servidor.php", "POST", rellenaSelect, JSON.stringify({servicio: "facturas"}));
+          }
+
+          // realiza la peticion al servidor,
+          // recibe como argumento el id de la factura que queremos mostrar en la tabla
+          function peticionRellenaTabla(idFactura){
+              // creamos un objeto js con el servicio que queremos consumir (detalle)
+              // y el id de la factura de la que queremos traer los detalles
+              var parametro = {
+                  servicio: "detalle",
+                  id:idFactura
+              }
+
+              // realizamos la petición al servidor, pasándole como parametro el objeto creado
+              httpRequest.peticion("servidor.php", "POST", rellenarTabla, JSON.stringify(parametro));
+          }
+
+          // rellena la lista de opciones del select todas las facturas disponibles
+          function rellenaSelect(facturas){
+              var select = document.getElementById("factura");
+              select.options.length = 1;
+              for(var facturaActual in facturas) {
+                  var opcion = document.createElement('option');
+                  opcion.value = facturas[facturaActual].ID;
+                  opcion.innerHTML = "Factura: " + facturas[facturaActual].NUMERO+ ". Fecha: "+ facturas[facturaActual].FECHA;
+                  select.options.add(opcion);
+              }
+          }
+
+          // rellena la tabla con los detalles de la factura
+          // recibe como parametro un array de detalles de factura
+          function rellenarTabla(detallesFactura) {
+              var tablaBody = document.getElementById("filas_tabla");
+              tablaBody.innerHTML = "";
+
+              // recorremos el array creando una fila en la tabla con cada detalle
+              for (var i = 0; i < detallesFactura.length; i++)
+                  tablaBody.appendChild(creaFila(detallesFactura[i]));
+
+          }
+
+          // devuelve una fila con los detalles de una factura
+          function creaFila(detalleFactura) {
+              // calculamos el iva y el total y los dejamos con dos decimales
+              var iva = parseFloat(detalleFactura.PRECIO) * parseFloat(detalleFactura.TIPO_IVA) / 100;
+              iva = iva.toFixed(2);
+
+              var total = parseFloat(detalleFactura.PRECIO) + parseFloat(iva);
+              total = total.toFixed(2);
+
+              var fila = document.createElement("tr");
+              var td = document.createElement("td");
+              td.innerHTML = detalleFactura.ID;
+              fila.appendChild(td);
+
+              td = document.createElement("td");
+              td.innerHTML = detalleFactura.CANTIDAD;
+              fila.appendChild(td);
+
+              td = document.createElement("td");
+              td.innerHTML = detalleFactura.CONCEPTO;
+              fila.appendChild(td);
+
+              td = document.createElement("td");
+              td.innerHTML = detalleFactura.PRECIO;
+              fila.appendChild(td);
+
+              td = document.createElement("td");
+              td.innerHTML = detalleFactura.TIPO_IVA;
+              fila.appendChild(td);
+
+              td = document.createElement("td");
+              td.innerHTML = iva;
+              fila.appendChild(td);
+
+              td = document.createElement("td");
+              td.innerHTML = total;
+              fila.appendChild(td);
+
+              td = document.createElement("td");
+              var boton = document.createElement("button");
+              boton.innerHTML="Borrar";
+              td.appendChild(boton);
+              boton.dataset.id_detalle = detalleFactura.ID;
+              boton.dataset.id_factura = detalleFactura.ID_FACTURA;
+              boton.dataset.concepto   = detalleFactura.CONCEPTO;
+              boton.onclick = borrarDetalle;
+              fila.appendChild(td);
+
+
+              return fila;
+          }
+
+          function insertarDetalle(event) {
+              event.preventDefault();
+              // primero comprobamos que se ha seleccionado alguna factura
+              if (document.getElementById("factura").value !== "-1"){
+                  // si el usuario seleccionado una factura
+                  // creamos un objeto js con los datos que ha introducido en los inputs
+
+                  // comprobamos que los valores de los inputs son válidos
+                  if (document.getElementById("cantidad").value > 0
+                  &&  document.getElementById("concepto").value.length > 0
+                  &&  document.getElementById("precio").value > 0
+                  &&  document.getElementById("tipo_iva").value > 0){
+                      var parametro = {
+                          servicio : "anade",
+                          id       : document.getElementById("factura").value,
+                          cantidad : document.getElementById("cantidad").value,
+                          concepto : document.getElementById("concepto").value,
+                          precio   : document.getElementById("precio").value,
+                          tipo_iva : document.getElementById("tipo_iva").value
+                      };
+
+                      httpRequest.peticion("servidor.php", "POST", rellenarTabla, JSON.stringify(parametro));
+                  }
+                  else {
+                      if (document.getElementById("cantidad").value <= 0)
+                          alert("Introduzca una cantidad valida");
+
+                      if (document.getElementById("concepto").value.length <= 0)
+                          alert("Introduzca un concepto");
+
+                      if (document.getElementById("precio").value <= 0)
+                          alert("Introduzca un precio válido");
+
+                      if (document.getElementById("tipo_iva").value <= 0)
+                          alert("Introduzca un tipo de iva válido");
+                  }
+              } else {
+                  alert("Debe seleccionar una factura para insertar")
+              }
+          }
+
+          function borrarDetalle(event){
+              event.preventDefault();
+              if(confirm("¿Esta seguro que desea borrar al detalle '"+this.dataset.concepto+"'?")){
+                  var parametro = {
+                      servicio:"borra",
+                      id:this.dataset.id_detalle,
+                      idFactura:this.dataset.id_factura
+                  };
+
+                  httpRequest.peticion("servidor.php","POST", function () {
+                      peticionRellenaTabla(parametro.idFactura);
+                  }, JSON.stringify(parametro));
+              }
+          }
+      </script>
+  </head>
+  
+  <body>
+  	
+    <h2>Examen 3. 1ª Evaluación. DWEC</h2>
+    <h3>Consulta de Facturas</h3>
+    <div>
+    	<p>
+		    <select id="factura">
+		    	<option value="-1">Selecciona una factura para consultar su detalle</option>
+		    </select>
+    	</p>
+    </div>
+    <div>
+    	Detalle de la factura:
+    	<p>
+		    <table id="detalle" border="1">
+		    	<thead>
+		    		<tr>
+		    			<th>ID</th>
+		    			<th>CANTIDAD</th>
+		    			<th>CONCEPTO</th>
+		    			<th>PRECIO</th>
+		    			<th>Tipo IVA</th>
+		    			<th>IVA</th>
+		    			<th>TOTAL</th>
+                        <th>BORRAR</th>
+		    		</tr>
+		    	</thead>
+					
+					
+		    	<tbody id="filas_tabla">
+		    		
+						
+		    	</tbody>
+					
+					
+		    	<tfoot>
+		    		<tr>
+		    			<td colspan="5">TOTALES: </td>
+		    			<td id="Tiva">suma iva</td>
+		    			<td id="Ttotal">suma TOTAL</td>
+		    		</tr>
+		    	</tfoot>
+		    </table>
+    	</p>
+    </div>
+		
+		<div>
+			<fieldset>
+				<legend>Añadir detalle</legend>
+				<p>
+					<label for="cantidad">Cantidad: </label>
+					<input type="text" id="cantidad" size="3" value="4" />
+				</p>
+				<p>
+					<label for="concepto">Concepto: </label>
+					<input type="text" id="concepto" size="44" value="Nuevo detalle" />
+				</p>
+				<p>
+					<label for="precio">precio: </label>
+					<input type="text" id="precio" size="4" value="25" /> €
+				</p>
+				
+				<p>
+					<label for="tipo_iva">Tipo IVA: </label>
+					<input type="text" id="tipo_iva" size="2" value="21" /> %
+				</p>
+			
+			</fieldset>
+			
+			<button id="btAnade">Añadir línea de detalle</button>
+		
+		</div>
+    
+  </body>
+</html>
