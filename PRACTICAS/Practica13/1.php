@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <?php
-date_default_timezone_set('UTC');
-setlocale(LC_TIME, "es");
 $cookie_name = "fecha_acceso";
 $cookie_value = strftime('%D %T');
 setcookie($cookie_name, $cookie_value, time()+3600); // termina en 1 hora

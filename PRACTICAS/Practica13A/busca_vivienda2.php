@@ -1,3 +1,16 @@
+<?php
+session_start();
+$select_tipos = null;
+
+
+if(isset($_SESSION["select_tipos_value"])) {
+    $select_tipos   = $_SESSION['select_tipos_value'];
+    echo $select_tipos;
+} else {
+    die("No se han encontrado las variables de sesión");
+}
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 <body>

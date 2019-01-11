@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <body>
@@ -14,6 +17,8 @@
 
             for ($i = 0; $i < sizeof($tipos_vivienda); $i++)
                 echo "<option value=\"$tipos_vivienda[$i]\">" . ucfirst($tipos_vivienda[$i]) . "\n";
+
+            $_SESSION["select_tipos_value"] = isset($_POST['select_tipos']) ? $_POST['select_tipos'] : 5;
             ?>
         </select>
     </label>
