@@ -2,9 +2,9 @@
 function recoger_valores_campos_formulario($campo)
 {
     $conexion = null;
-    $result = null;
+    $result   = null;
     $vivienda = null;
-    $lista = null;
+    $lista    = null;
 
     // Nos conectamos a la base de datos
     try {

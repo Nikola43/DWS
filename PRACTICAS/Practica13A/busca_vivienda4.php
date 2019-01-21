@@ -1,20 +1,22 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <body>
 <h1>Búsqueda de vivienda</h1>
-<p>Introduzca los datos de la vivienda</p>
-<form method="POST" action="dos.php">
-    <label>
-        Usuario:
-        <input type="text" name="user">
-    </label>
+<p>1. Tipo > 2. Zona > 3. Características > <span style="color:black;font-weight:bold">4. Extras</span></p>
+<form method="POST" action="busca_vivienda3.php">
+    <h3>Paso 3: Elija las características básicas de la vivienda</h3>
+
+    Extras:
+    <input type="checkbox" title="extras" name="extras[]" value=\"piscina\">Piscina
+    <input type="checkbox" title="extras" name="extras[]" value=\"jardin\">Jardín
+    <input type="checkbox" title="extras" name="extras[]" value=\"garage\">Garage
     <br>
-    <label>
-        Contraseña:
-        <input type="password" name="passwd">
-    </label>
     <br>
-    <button type="submit" name="enviar">Enviar</button>
+    <a href="<?php echo $_SERVER['HTTP_REFERER'] ?>">< Anterior</a>
+    <button type="submit" name="siguiente">Siguiente ></button>
 </form>
 </body>
 </html>
