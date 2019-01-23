@@ -24,7 +24,7 @@
         <?php
         // Conectar con el servidor de base de datos
             try {
-                $conexion = new PDO("mysql:host=localhost;dbname=lindavista", "root", "paulo1994");
+                $conexion = new PDO("mysql:host=localhost;dbname=lindavista", "alumno", "velazquez");
                 $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             }
             catch (PDOException $e) {
