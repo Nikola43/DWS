@@ -14,10 +14,13 @@ session_start();
     </tr>
     <?php
     $noticias = consulta("noticias");
-    var_dump($noticias[0]);
-    for ($i = 0; $i < count($noticias); $i++){
+
+    for ($i = 0; $i < count($noticias); $i++) {
+        $campos_noticias = explode("*", $noticias[$i]);
         echo "<tr>";
-        echo "<td>hola</td>";
+        for ($j = 0; $j < count($campos_noticias); $j++) {
+            echo "<td>$campos_noticias[$j]</td>";
+        }
         echo "</tr>";
     }
     ?>
@@ -45,7 +48,7 @@ function consulta($tabla)
         $data = $conn->query($sql)->fetchAll();
 
         foreach ($data as $row) {
-            $texto = $row['titulo'] . "," . $row['texto'] . "," . $row['categoria'] . "," . $row['fecha'] . "," . $row['imagen'];
+            $texto = $row['titulo'] . "*" . $row['texto'] . "*" . $row['categoria'] . "*" . $row['fecha'] . "*" . $row['imagen'];
             array_push($datos, $texto);
         }
         $conn = null;
