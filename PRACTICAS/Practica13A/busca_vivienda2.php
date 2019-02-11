@@ -2,7 +2,6 @@
 session_start();
 $select_tipos = null;
 
-
 if(isset($_SESSION["select_tipos_value"])) {
     $select_tipos   = $_SESSION['select_tipos_value'];
     echo $select_tipos;

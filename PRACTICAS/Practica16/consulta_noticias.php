@@ -34,6 +34,9 @@ function consulta($tabla)
     $servername = "localhost";
     $username = "alumno";
     $password = "velazquez";
+    $username = "root";
+    $password = "paulo1994";
+
     $db = "noticias_lindavista";
     $conn = null;
 

@@ -1,11 +1,14 @@
 <?php
 session_start();
+require "utilPeticiones.php";
 $usuario = null;
 $contrasena = null;
 
 if (isset($_POST["enviar"])) {
-    $usuario    = POST('nombre_usuario');
-    $contrasena = POST('passwd');
+    $_SESSION['usuario'] = POST('nombre_usuario');
+    $_SESSION['passwd'] = POST('passwd');
+    $usuario    = $_SESSION['usuario'];
+    $contrasena = $_SESSION['passwd'];
 
     $resultadoLogin = login($usuario, $contrasena);
 
@@ -44,17 +47,16 @@ if (isset($_POST["enviar"])) {
     <?php
 }
 
-function POST($nombre){
-    $respuesta = $_POST[$nombre];
-    return(!empty($respuesta) ? htmlspecialchars(trim(strip_tags($respuesta))) : null);
-}
-
 // devuelve 1 si se loguea
 function login($user, $passwd)
 {
     $servername = "localhost";
     $username = "alumno";
     $password = "velazquez";
+
+    $username = "root";
+    $password = "paulo1994";
+
     $db = "noticias_lindavista";
     $hashed_password = md5($passwd);
     $conn = null;
