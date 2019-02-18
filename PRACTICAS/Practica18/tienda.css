@@ -88,7 +88,7 @@ input[type="password"] {
 }
 .pagproductos #cesta {
     float: right;
-    width: 12em;
+    width: 20em;
     background-color: #588;
 }
 .pagproductos #cesta h3 {
@@ -98,7 +98,7 @@ input[type="password"] {
 .pagproductos #cesta p {
     margin-left: 10px;
     margin-right: 10px;
-    font-size: 10px;
+    font-size: 15px;
 }
 .pagproductos #cesta input[type="submit"] {
     margin-left: 10px;
@@ -113,7 +113,7 @@ input[type="password"] {
 }
 .pagcesta #productos {
     margin: 10px;
-    font-size: 12px;
+    font-size: 1px;
 }
 .pagproductos #productos input,
 .pagproductos #productos p {

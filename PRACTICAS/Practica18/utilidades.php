@@ -140,3 +140,48 @@ function rellenaSelectProductos(){
     return $arrayProductos;
 }
 
+function getProductosPorFamiliaOrdenado($familia, $tipo_ordenacion){
+    // credenciales de conexión
+    $servername = "localhost";
+    $db = "dwes";
+    $username = "alumno";
+    $password = "velazquez";
+    $arrayProductos = array();
+
+    $conn = null;
+
+
+
+
+    try {
+        // realizamos la conexión con la base de datos
+        $conn = new PDO("mysql:host=$servername;dbname=$db", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn->exec("set names utf8");
+        $sql = "SELECT * FROM producto WHERE familia = '$familia'";
+
+        if ($tipo_ordenacion == 1){
+            $sql .= " ORDER BY PVP";
+        }
+        if ($tipo_ordenacion == 2){
+            $sql .= " ORDER BY nombre_corto";
+        }
+
+        error_log($sql);
+
+        $data = $conn->query($sql)->fetchAll();
+
+        // Recorremos el array de resultados
+        foreach ($data as $row) {
+            array_push($arrayProductos, $row);
+        }
+
+        // cerramos la conexión
+        $conn = null;
+    } catch (PDOException $e) {
+        echo "Connection failed: " . $e->getMessage();
+    }
+    return $arrayProductos;
+}
+
+

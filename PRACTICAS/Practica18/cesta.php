@@ -8,14 +8,11 @@ if (!isset($_SESSION['usuario'])) {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
         "http://www.w3.org/TR/html4/loose.dtd">
-<!-- Desarrollo Web en Entorno Servidor -->
-<!-- Tema 4 : Desarrollo de aplicaciones web con PHP -->
-<!-- Ejemplo Tienda Web: cesta.php -->
 <html>
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <title>Ejemplo Tema 4: Cesta de la Compra</title>
-    <link href="tienda.css" rel="styl esheet" type="text/css">
+    <link href="tienda.css" rel="stylesheet" type="text/css">
 </head>
 <body class="pagcesta">
 <div id="contenedor">
@@ -28,7 +25,9 @@ if (!isset($_SESSION['usuario'])) {
         foreach ($_SESSION['cesta'] as $codigo => $producto) {
             echo "<p><span class='codigo'>$codigo</span>";
             echo "<span class='nombre'>${producto['nombre']}</span>";
-            echo "<span class='precio'>${producto['precio']}</span></p>";
+            echo "<span class='precio'>${producto['precio']} x ${producto['unidades']}</span> unidades </p>";
+            echo "<span class='precio'></span></p>";
+            $producto['precio'] = $producto['precio'] * $producto['unidades'];
             $total += $producto['precio'];
         }
         ?>

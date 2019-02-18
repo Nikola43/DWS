@@ -2,15 +2,6 @@
 // Recuperamos la información de la sesión
 session_start();
 require "utilidades.php";
-
-if (isset($_POST["boton_mostrar"])){
-
-    $elementoSeleccionado = $_POST["select_productos"];
-    echo $elementoSeleccionado;
-
-    var_dump($elementoSeleccionado);
-}
-
 // Y comprobamos que el usuario se haya autentificado
 if (!isset($_SESSION['usuario'])) {
     die("Error - debe <a href='login.php'>identificarse</a>.<br />");
@@ -46,16 +37,39 @@ if (!isset($_SESSION['usuario'])) {
 // Creamos un array con los datos del nuevo producto d elña base de datos
             $producto['nombre'] = $_POST['nombre'];
             $producto['precio'] = $_POST['precio'];
+            $producto['unidades'] = $_POST['unidades'];
             $_SESSION['cesta'][$_POST['producto']] = $producto;
         }
+
         // Si la cesta está vacía, mostramos un mensaje
         $cesta_vacia = true;
         if (!isset($_SESSION['cesta'])) {
             print "<p>Cesta vacía</p>";
         } // Si no está vacía, mostrar su contenido
         else {
-            foreach ($_SESSION['cesta'] as $codigo => $producto)
-                print "<p>$codigo</p>";
+            $total_totalisimo = 0;
+
+            if (isset($_POST['borrar']) && isset($_POST['codigo_producto'])) {
+
+                unset($_SESSION['cesta'][$_POST['codigo_producto']]);
+
+            }
+
+            foreach ($_SESSION['cesta'] as $codigo => $producto) {
+                $total = $producto['unidades'] * $producto['precio'];
+                $total_totalisimo += $total;
+                print "<p>${producto['unidades']} unidades de $codigo $total € 
+                <form action='productos.php' method='post'>
+                 <button type='submit' name='borrar'>Borrar</button>
+                  <input type='hidden'  name='codigo_producto' value='$codigo'>
+                 </form>
+                 </p>";
+                echo "<p>Total $total_totalisimo</p>";
+            }
+
+
+
+
             $cesta_vacia = false;
 
         }
@@ -77,51 +91,59 @@ if (!isset($_SESSION['usuario'])) {
     </div>
 
     <div id="productos">
-        <form action="productos.php" name="form_filtro">
+        <form action="productos.php" name="form_filtro" method="post">
             <label>
                 <select name="select_productos">
                     <option value="-1" selected="selected">Seleccione un equipo</option>
                     <?php
                     $array = rellenaSelectProductos();
-                    foreach ($array as $fila){
+                    foreach ($array as $fila) {
                         $elemento = $fila["nombre"];
                         $valor = $fila["cod"];
-                        echo "<option value='$codigo'>$elemento</option>";
+
+                        if (isset($_POST["select_productos"]) && $_POST["select_productos"] == $valor) {
+                            echo "<option selected='selected' value='$valor'>$elemento</option>";
+                        } else {
+                            echo "<option value='$valor'>$elemento</option>";
+                        }
                     }
                     ?>
+                </select>
+                <select name="select_ordenar">
+                    <option value="-1" selected="selected">Ordenar por</option>
+                    <option <?php if (isset($_POST["select_ordenar"]) && $_POST["select_ordenar"] == 1) echo "selected='selected'"; else echo "" ?>
+                            value="1">Precio
+                    </option>
+                    <option <?php if (isset($_POST["select_ordenar"]) && $_POST["select_ordenar"] == 2) echo "selected='selected'"; else echo "" ?>
+                            value="2">Alfabeticamente
+                    </option>
                 </select>
             </label>
             <button type="submit" name="boton_mostrar">Mostrar Productos</button>
         </form>
         <?php
-        try {
-            $opc = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
-            $dsn = "mysql:host=localhost;dbname=dwes";
-            $dwes = new PDO($dsn, "alumno", "velazquez", $opc);
-        } catch (PDOException $e) {
-            $error = $e->getCode();
-            $mensaje = $e->getMessage();
-        }
-        if (!isset($error)) {
-            $sql = "SELECT cod, nombre_corto, PVP FROM producto";
-            //  WHERE familia='CONSOL'
-            $resultado = $dwes->query($sql);
-            if ($resultado) {
-                // Creamos un formulario por cada producto obtenido
-                $row = $resultado->fetch();
-                while ($row != null) {
-                    echo "<p><form id='${row['cod']}' action='productos.php' method='post'>";
-                    // Metemos ocultos los datos de los productos
-                    echo "<input type='hidden' name='producto' value='" . $row['cod'] . "'/>";
-                    echo "<input type='hidden' name='nombre' value='" . $row['nombre_corto'] . "'/>";
-                    echo "<input type='hidden' name='precio' value='" . $row['PVP'] . "'/>";
-                    echo "<input type='submit' name='enviar' value='Añadir'/>";
-                    echo " ${row['nombre_corto']}: ";
-                    echo $row['PVP'] . " euros.";
-                    echo "</form>";
-                    echo "</p>";
-                    $row = $resultado->fetch();
-                }
+
+        if (isset($_POST["boton_mostrar"])) {
+
+            // elemento seleccionado del select
+            $elementoSeleccionado = $_POST["select_productos"];
+
+            // elemento seleccionado select ordenar por nombre o alfabeticamente
+            $ordenar_por = isset($_POST["select_ordenar"]) ? $_POST["select_ordenar"] : -1;
+
+            $listaProductos = getProductosPorFamiliaOrdenado($elementoSeleccionado, $ordenar_por);
+
+            foreach ($listaProductos as $row) {
+                echo "<p><form id='${row['cod']}' action='productos.php' method='post'>";
+                echo "<input type='hidden' name='producto' value='" . $row['cod'] . "'/>";
+                echo "<input type='hidden' name='nombre' value='" . $row['nombre_corto'] . "'/>";
+                echo "<input type='hidden' name='precio' value='" . $row['PVP'] . "'/>";
+                echo "<input type='submit' name='enviar' value='Añadir'/>";
+                echo " ${row['nombre_corto']}: ";
+                echo $row['PVP'] . " euros.";
+                echo "&nbsp;<input type='number' name='unidades'/> unidades";
+                echo "</form>";
+                echo "</p>";
             }
         }
         ?>
@@ -144,4 +166,3 @@ if (!isset($_SESSION['usuario'])) {
 </div>
 </body>
 </html>
-La página se divide
