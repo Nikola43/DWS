@@ -15,7 +15,7 @@ function login($user, $passwd)
     //$username = "alumno";
     //$password = "velazquez";
     $username = "root";
-    $password = "";
+    $password = "paulo1994";
 
     $hashed_password = md5($passwd);
     $conn = null;
@@ -67,7 +67,7 @@ function get_viviendas()
 
     // descomentar en casa
     $username = "root";
-    $password = "";
+    $password = "paulo1994";
     $viviendas = array();
 
     // realizamos la conexión con la base de datos
@@ -107,7 +107,7 @@ function eliminar_vivienda($array_viviendas)
     //$username = "alumno";
     //$password = "velazquez";
     $username = "root";
-    $password = "";
+    $password = "paulo1994";
 
     // realizamos la conexión con la base de datos
     $conn = new PDO("mysql:host=$servername;dbname=$db", $username, $password);
@@ -116,7 +116,10 @@ function eliminar_vivienda($array_viviendas)
 
     // eliminamos la vivienda
     $lista_viviendas = implode(",", $array_viviendas);
-    $sql = "DELETE FROM vivienda WHERE id IN " . "($lista_viviendas)";
+    var_dump($lista_viviendas);
+
+    $sql = "DELETE FROM vivienda WHERE id IN (" . $lista_viviendas . ')';
+    error_log($sql);
     $data = $conn->query($sql);
 
     error_log($sql);
@@ -135,7 +138,7 @@ function get_vivienda_by_id($id)
     //$username = "alumno";
     //$password = "velazquez";
     $username = "root";
-    $password = "";
+    $password = "paulo1994";
     $vivienda = null;
 
     // realizamos la conexión con la base de datos

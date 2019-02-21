@@ -29,9 +29,12 @@ if (!isset($_SESSION['usuario'])) {
         <h3><img src="cesta.png" alt="Cesta" width="24" height="21"> Cesta</h3>
         <hr/>
         <?php
-        $_SESSION['listaProductos'];
         // cremaos una cesta vacía
-        $cesta = new CestaCompra();
+        if (!isset($_SESSION['lista_productos'])) {
+            $cesta = new CestaCompra();
+        } else{
+            $cesta = $_SESSION['lista_productos'];
+        }
 
         // Comprobamos si se ha enviado el formulario de vaciar la cesta
         if (isset($_POST['vaciar'])) {
@@ -42,6 +45,7 @@ if (!isset($_SESSION['usuario'])) {
         if (isset($_POST['insertar'])) {
             $productoInsertado = new Producto(POST('cod'), POST('nombre_corto'), POST('PVP'));
             $cesta->insertarProducto($productoInsertado);
+            $_SESSION['lista_productos'] = $cesta;
         }
         // Si la cesta está vacía, mostramos un mensaje
         if ($cesta->estaVacia()) {
@@ -75,16 +79,16 @@ if (!isset($_SESSION['usuario'])) {
         foreach ($resultadoConsulta as $productoActual) {
             $productoActual = new Producto($productoActual['cod'], $productoActual['nombre_corto'], $productoActual['PVP']);
 
-            echo "<p><form id='" . $productoActual->getCod() . "' action='productos.php' method='post'>";
+            echo "<p>
+                 <form id='" . $productoActual->getCod() . "' action='productos.php' method='post'>";
             // Metemos ocultos los datos de los productos
             echo "<input type='hidden' name='cod' value='" . $productoActual->getCod() . "'/>";
             echo "<input type='hidden' name='nombre_corto' value='" . $productoActual->getNombre() . "'/>";
             echo "<input type='hidden' name='PVP' value='" . $productoActual->getPVP() . "'/>";
             echo "<input type='submit' name='insertar' value='Añadir'/>";
-            echo $productoActual->getNombreCorto() . ": ";
-            echo $productoActual->getPVP() . " euros.";
+            echo $productoActual->getNombreCorto() . ": " . $productoActual->getPVP() . "€";
             echo "</form>";
-            echo "</p>";
+            echo "</p> <br>\n";
         }
 
         ?>

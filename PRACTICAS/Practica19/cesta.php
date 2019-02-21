@@ -1,4 +1,8 @@
 <?php
+include_once "Producto.php";
+include_once "BaseDatos.php";
+include_once "CestaCompra.php";
+include_once "utilidades.php";
 // Recuperamos la información de la sesión
 session_start();
 // Y comprobamos que el usuario se haya autentificado
@@ -15,7 +19,7 @@ die("Error - debe <a href='login.php'>identificarse</a>.<br />");
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Ejemplo Tema 4: Cesta de la Compra</title>
-<link href="tienda.css" rel="stylesheet" type="text/css">
+
 </head>
 <body class="pagcesta">
 <div id="contenedor">
@@ -25,8 +29,15 @@ die("Error - debe <a href='login.php'>identificarse</a>.<br />");
 <div id="productos">
 <?php
 $total = 0;
-foreach($_SESSION['cesta'] as $codigo => $producto) {
-echo "<p><span class='codigo'>$codigo</span>";
+
+$lista_productos = $_SESSION['lista_productos'];
+var_dump($lista_productos);
+echo "----------------------------------------------------------------------------------<br>\n";
+$cesta = new CestaCompra($lista_productos);
+var_dump($cesta);
+
+foreach($lista_productos as $producto) {
+echo "<p><span class='codigo'>producto->getCod()</span>";
 echo "<span class='nombre'>${producto['nombre']}</span>";
 echo "<span class='precio'>${producto['precio']}</span></p>";
 $total += $producto['precio'];

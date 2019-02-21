@@ -7,20 +7,18 @@ class CestaCompra
     private $listaProductos = [];
 
     // CONSTRUCTOR
-    public function __construct()
+    public function __construct($listaProductos)
     {
         if ($this->estaVacia()) {
             $this->listaProductos = array();
+        } else {
+            $this->listaProductos = $listaProductos;
         }
     }
 
-    public function inicializarCesta(){
-        if ($this->estaVacia()) {
-            $this->listaProductos = array();
-
-        } else {
-            $_SESSION['listaProductos'] = $this->listaProductos;
-        }
+    // A "named constructor" that works similar to a copy constructor
+    public static function cloneCesta(CestaCompra $listaProductos) {
+        return new self($listaProductos->listaProductos);
     }
 
     // METODOS GET
