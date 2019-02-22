@@ -1,8 +1,8 @@
 <?php
 require("utilPeticiones.php");
 session_start();
-$usuario     = $_SESSION["usuario"];
-$rol         = $_SESSION["rol"];
+$usuario = $_SESSION["usuario"];
+$rol = $_SESSION["rol"];
 
 ?>
 <html lang="es">
@@ -17,7 +17,20 @@ define("SL", "\n</br>"); // Salto de linea
 require("Vivienda.php");
 
 
-if (!isset($_POST["borrar_button"])) {
+if (isset($_POST['confirmar_button'])) {
+    var_dump($_POST['lista_viviendas_confirmadas']);
+
+    $lista_viviendas_confirmadas = !empty($_POST['lista_viviendas_confirmadas']) ? $_POST['lista_viviendas_confirmadas'] : null;
+    var_dump($lista_viviendas_confirmadas);
+
+    if (eliminar_vivienda(unserialize($lista_viviendas_confirmadas))) {
+        echo "<span style=\"color:green;font-weight:bold\">Vivienda eliminada correctamente</span>" . SL . SL;
+    } else {
+        echo "<span style=\"color:red;font-weight:bold\">Error Eliminando vivienda</span>" . SL . SL;
+    }
+
+    echo "<a href=\"index.php\">Volver</a>" . SL;
+} else if (!isset($_POST["borrar_button"])) {
     echo "<h1>Consulta de viviendas</h1>
         <form title=\"vivienda_form\" action='viviendas.php' method=\"post\" enctype=\"multipart/form-data\">
         <table border=\"1px\">
@@ -25,12 +38,12 @@ if (!isset($_POST["borrar_button"])) {
             <tr>
                 <th>Tipo</th>
                 <th>Zona</th>
-                <th>Dormitorios</th>
-                <th>Precio</th>
-                <th>Tamaño</th>
+                <th><form action='viviendas.php' method='post'><button name='ordenar_dormitorios' type='submit'>Dormitorios</button></form></th>
+                <th><form action='viviendas.php' method='post'><button name='ordenar_precio'     type='submit'>Precio</button></form></th>
+                <th><form action='viviendas.php' method='post'><button name='ordenar_tamanio'    type='submit'>Tamaño</button></form></th>
                 <th>Extras</th>
                 <th>Foto</th>";
-    if ($rol == 'admin'){
+    if ($rol == 'admin') {
         echo "<th>Borrar</th>";
     }
     echo "
@@ -66,6 +79,17 @@ if (!isset($_POST["borrar_button"])) {
     }
     echo "</form>\n";
 
+    if (isset($_POST['ordenar_dormitorios'])) {
+        error_log("sdf");
+        sort($lista_viviendas);
+    }
+    if (isset($_POST['ordenar_precio'])) {
+        error_log("sdf");
+    }
+    if (isset($_POST['ordenar_tamanio'])) {
+        error_log("sdf");
+    }
+
 } else {
     $lista_viviendas = array();
     $lista_viviendas_borradas = !empty($_POST['borrar']) ? $_POST['borrar'] : null;
@@ -89,28 +113,13 @@ if (!isset($_POST["borrar_button"])) {
 
     ?>
     <form title="borrar_form" action='viviendas.php' method="post" enctype="multipart/form-data">
-        <input type="submit" id="confirmar_button" title="confirmar_button" name="confirmar_button" value='Confirmar borrado viviendas'>
+        <input type="submit" id="confirmar_button" title="confirmar_button" name="confirmar_button"
+               value='Confirmar borrado viviendas'>
         <input type="text" name="lista_viviendas_confirmadas[]" hidden="hidden" value="1"
     </form>
     <?php
-
 }
 
-if (isset($_POST['confirmar_button'])) {
-
-    var_dump($_POST['lista_viviendas_confirmadas']);
-
-    $lista_viviendas_confirmadas = !empty($_POST['lista_viviendas_confirmadas']) ? $_POST['lista_viviendas_confirmadas'] : null;
-    var_dump($lista_viviendas_confirmadas);
-
-    if (eliminar_vivienda(unserialize($lista_viviendas_confirmadas))) {
-        echo "<span style=\"color:green;font-weight:bold\">Vivienda eliminada correctamente</span>" . SL . SL;
-    } else {
-        echo "<span style=\"color:red;font-weight:bold\">Error Eliminando vivienda</span>" . SL . SL;
-    }
-
-    echo "<a href=\"index.php\">Volver</a>" . SL;
-}
 ?>
 </body>
 </html>
