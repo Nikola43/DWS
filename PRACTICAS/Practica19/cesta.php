@@ -31,13 +31,13 @@ die("Error - debe <a href='login.php'>identificarse</a>.<br />");
 $total = 0;
 
 $lista_productos = $_SESSION['lista_productos'];
-var_dump($lista_productos);
+//var_dump($lista_productos);
 echo "----------------------------------------------------------------------------------<br>\n";
-$cesta = new CestaCompra($lista_productos);
-var_dump($cesta);
-
-foreach($lista_productos as $producto) {
-echo "<p><span class='codigo'>producto->getCod()</span>";
+$cesta = $_SESSION['lista_productos'];
+//var_dump($cesta->getListaProductos());
+var_dump($_SESSION['lista_productos'][0][0]);
+foreach($_SESSION['lista_productos'] as $producto) {
+echo "<p><span class='codigo'>${producto['cod']}</span>";
 echo "<span class='nombre'>${producto['nombre']}</span>";
 echo "<span class='precio'>${producto['precio']}</span></p>";
 $total += $producto['precio'];

@@ -31,9 +31,9 @@ if (!isset($_SESSION['usuario'])) {
         <?php
         // cremaos una cesta vacía
         if (!isset($_SESSION['lista_productos'])) {
-            $cesta = new CestaCompra();
+            $cesta = new CestaCompra(null);
         } else{
-            $cesta = $_SESSION['lista_productos'];
+            $cesta = CestaCompra::cloneCesta($_SESSION['lista_productos']);
         }
 
         // Comprobamos si se ha enviado el formulario de vaciar la cesta
