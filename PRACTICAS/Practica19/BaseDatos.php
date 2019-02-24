@@ -14,8 +14,8 @@ class BaseDatos
         $username = "alumno";
         $password = "velazquez";
 
-        //$username = "root";
-        //$password = "paulo1994";
+        $username = "root";
+        $password = "paulo1994";
 
         try {
             $this->conn = new PDO("mysql:host=$servername;dbname=$db", $username, $password);

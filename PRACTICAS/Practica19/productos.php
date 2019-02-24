@@ -6,6 +6,7 @@ include_once "utilidades.php";
 
 // Recuperamos la información de la sesión
 session_start();
+$cesta;
 // Y comprobamos que el usuario se haya autentificado
 if (!isset($_SESSION['usuario'])) {
     die("Error - debe <a href='login.php'>identificarse</a>.<br />");
@@ -30,10 +31,11 @@ if (!isset($_SESSION['usuario'])) {
         <hr/>
         <?php
         // cremaos una cesta vacía
-        if (!isset($_SESSION['lista_productos'])) {
-            $cesta = new CestaCompra(null);
+        if (isset($_SESSION['lista_productos'])) {
+            $cesta = new CestaCompra($_SESSION['lista_productos']);
+            var_dump($cesta);
         } else{
-            $cesta = CestaCompra::cloneCesta($_SESSION['lista_productos']);
+            $cesta = new CestaCompra(null);
         }
 
         // Comprobamos si se ha enviado el formulario de vaciar la cesta
@@ -45,7 +47,7 @@ if (!isset($_SESSION['usuario'])) {
         if (isset($_POST['insertar'])) {
             $productoInsertado = new Producto(POST('cod'), POST('nombre_corto'), POST('PVP'));
             $cesta->insertarProducto($productoInsertado);
-            $_SESSION['lista_productos'] = $cesta;
+            $_SESSION['lista_productos'] = $cesta->getListaProductos();
         }
         // Si la cesta está vacía, mostramos un mensaje
         if ($cesta->estaVacia()) {
