@@ -18,8 +18,6 @@ require("Vivienda.php");
 
 
 if (isset($_POST['confirmar_button'])) {
-    var_dump($_POST['lista_viviendas_confirmadas']);
-
     $lista_viviendas_confirmadas = !empty($_POST['lista_viviendas_confirmadas']) ? $_POST['lista_viviendas_confirmadas'] : null;
     var_dump($lista_viviendas_confirmadas);
 
@@ -52,6 +50,16 @@ if (isset($_POST['confirmar_button'])) {
             <tbody>\n";
 
     $lista_viviendas = get_viviendas();
+    if (isset($_POST['ordenar_dormitorios'])) {
+        usort($lista_viviendas, "cmp_dormitorios");
+    }
+    if (isset($_POST['ordenar_precio'])) {
+        usort($lista_viviendas, "cmp_precio");
+    }
+    if (isset($_POST['ordenar_tamanio'])) {
+        usort($lista_viviendas, "cmp_tamanio");
+    }
+
     for ($i = 0; $i < count($lista_viviendas); $i++) {
         echo "\t\t<tr>\n";
         echo "\t\t\t<td>" . $lista_viviendas[$i]->getTipo() . "</td>\n";
@@ -60,7 +68,7 @@ if (isset($_POST['confirmar_button'])) {
         echo "\t\t\t<td>" . $lista_viviendas[$i]->getPrecio() . "</td>\n";
         echo "\t\t\t<td>" . $lista_viviendas[$i]->getTamanio() . "</td>\n";
         echo "\t\t\t<td>" . $lista_viviendas[$i]->getExtras() . "</td>\n";
-        echo "\t\t\t<td>" . "<a href=\"" . $lista_viviendas[$i]->getFoto() . "\"> <img src=\"imagenes/ico-fichero.png\" title=\"imagen\" name=\"imagen\"  height=\"30\" width=\"30\">" . "<a/></td>\n";
+        echo "\t\t\t<td>" . "<a href=\"" . $lista_viviendas[$i]->getFoto() . "\"> <img src=\"icono-fichero.png\" title=\"imagen\" name=\"imagen\"  height=\"30\" width=\"30\">" . "<a/></td>\n";
 
         if ($rol == 'admin') {
             echo "\t\t\t<td>" . "<input type=\"checkbox\" name=\"borrar[]\" value=\"" . $lista_viviendas[$i]->getId() . "\"></td>\n";
@@ -78,18 +86,6 @@ if (isset($_POST['confirmar_button'])) {
         echo "<button type=\"submit\" id=\"borrar_button\" title=\"borrar_button\" name=\"borrar_button\">Borrar viviendas</button>\n";
     }
     echo "</form>\n";
-
-    if (isset($_POST['ordenar_dormitorios'])) {
-        error_log("sdf");
-        sort($lista_viviendas);
-    }
-    if (isset($_POST['ordenar_precio'])) {
-        error_log("sdf");
-    }
-    if (isset($_POST['ordenar_tamanio'])) {
-        error_log("sdf");
-    }
-
 } else {
     $lista_viviendas = array();
     $lista_viviendas_borradas = !empty($_POST['borrar']) ? $_POST['borrar'] : null;
@@ -115,9 +111,24 @@ if (isset($_POST['confirmar_button'])) {
     <form title="borrar_form" action='viviendas.php' method="post" enctype="multipart/form-data">
         <input type="submit" id="confirmar_button" title="confirmar_button" name="confirmar_button"
                value='Confirmar borrado viviendas'>
-        <input type="text" name="lista_viviendas_confirmadas[]" hidden="hidden" value="1"
+        <input type="text" name="lista_viviendas_confirmadas" title="lista_viviendas_confirmadas" hidden="hidden" value="1"
     </form>
     <?php
+}
+
+function cmp_precio($a, $b)
+{
+    return strcmp($a->getPrecio(), $b->getPrecio());
+}
+
+function cmp_dormitorios($a, $b)
+{
+    return strcmp($a->getNumeroDormitorios(), $b->getNumeroDormitorios());
+}
+
+function cmp_tamanio($a, $b)
+{
+    return strcmp($a->getTamanio(), $b->getTamanio());
 }
 
 ?>
