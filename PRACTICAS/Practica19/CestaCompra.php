@@ -7,18 +7,9 @@ class CestaCompra
     private $listaProductos = [];
 
     // CONSTRUCTOR
-    public function __construct($listaProductos)
+    public function __construct()
     {
-        if ($this->estaVacia()) {
-            $this->listaProductos = array();
-        } else {
-            $this->listaProductos = $listaProductos;
-        }
-    }
-
-    // A "named constructor" that works similar to a copy constructor
-    public static function cloneCesta(CestaCompra $listaProductos) {
-        return new self($listaProductos->listaProductos);
+        $this->listaProductos = array();
     }
 
     // METODOS GET
@@ -50,6 +41,14 @@ class CestaCompra
         $this->listaProductos = array_diff($this->listaProductos, array($producto));
     }
 
+    /* Recibe como parametro un objeto de la clase producto
+ * Elimina el producto pasado por parametro de la lista de productos
+ */
+    public function eliminarProductoPorIndice($indice)
+    {
+        array_splice($this->listaProductos, $indice, 1);
+    }
+
     /*
      * Devuelve un entero con el numero productos en la cesta
      */
@@ -64,6 +63,9 @@ class CestaCompra
     public function vaciarCesta()
     {
         unset($this->listaProductos);
+        if (isset($_SESSION['lista_productos'])) {
+            unset($_SESSION['lista_productos']);
+        }
     }
 
     public function estaVacia()
@@ -71,9 +73,24 @@ class CestaCompra
         return $this->getNumeroProductos() == 0 ? true : false;
     }
 
-    public function muestraProductosCesta(){
-        foreach ($this->listaProductos as $productoActual){
+    public function muestraProductosCesta()
+    {
+        foreach ($this->listaProductos as $productoActual) {
             $productoActual->mostrarProducto();
         }
+    }
+
+
+    public function calcularPrecioTotal()
+    {
+        $total = 0;
+        foreach ($this->listaProductos as $producto) {
+            $total += $producto->getPVP();
+        }
+        return $total;
+    }
+
+    public function getProducto($indice){
+        return $this->listaProductos[$indice]->mostrarProducto();
     }
 }

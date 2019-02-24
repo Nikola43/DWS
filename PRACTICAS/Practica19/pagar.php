@@ -1,7 +1,7 @@
 <?php
 // Recuperamos la información de la sesión
 session_start();
-unset($_SESSION['cesta']);
+unset($_SESSION['lista_productos']);
 die("Gracias por su compra.<br />Quiere <a href='productos.php'>comenzar de nuevo</a>?");
 ?>
 

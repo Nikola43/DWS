@@ -6,7 +6,6 @@ include_once "utilidades.php";
 
 // Recuperamos la información de la sesión
 session_start();
-$cesta;
 // Y comprobamos que el usuario se haya autentificado
 if (!isset($_SESSION['usuario'])) {
     die("Error - debe <a href='login.php'>identificarse</a>.<br />");
@@ -32,10 +31,10 @@ if (!isset($_SESSION['usuario'])) {
         <?php
         // cremaos una cesta vacía
         if (isset($_SESSION['lista_productos'])) {
-            $cesta = new CestaCompra($_SESSION['lista_productos']);
-            var_dump($cesta);
+            $cesta = new CestaCompra();
+            $cesta->setListaProducto($_SESSION['lista_productos']);
         } else{
-            $cesta = new CestaCompra(null);
+            $cesta = new CestaCompra();
         }
 
         // Comprobamos si se ha enviado el formulario de vaciar la cesta
@@ -49,11 +48,21 @@ if (!isset($_SESSION['usuario'])) {
             $cesta->insertarProducto($productoInsertado);
             $_SESSION['lista_productos'] = $cesta->getListaProductos();
         }
+        if (isset($_POST['borrar_producto'])) {
+            $cesta->eliminarProductoPorIndice($_POST['producto_borrado']);
+            $_SESSION['lista_productos'] = $cesta->getListaProductos();
+        }
+
         // Si la cesta está vacía, mostramos un mensaje
         if ($cesta->estaVacia()) {
             print "<p>Cesta vacía</p>";
         } else {
-            $cesta->muestraProductosCesta();
+            for ($i = 0; $i < count($cesta->getListaProductos()); $i++) {
+                echo "<form action='productos.php' method='post'><button type='submit' name='borrar_producto'>Borrar</button><input type='hidden' name='producto_borrado' value='$i'></form>";
+                echo $cesta->getProducto($i);
+            }
+            //$cesta->muestraProductosCesta();
+            echo "Total: " . $cesta->calcularPrecioTotal();
         }
         ?>
         <form id='vaciar' action='productos.php' method='post'>
@@ -90,9 +99,8 @@ if (!isset($_SESSION['usuario'])) {
             echo "<input type='submit' name='insertar' value='Añadir'/>";
             echo $productoActual->getNombreCorto() . ": " . $productoActual->getPVP() . "€";
             echo "</form>";
-            echo "</p> <br>\n";
+            echo "</p>";
         }
-
         ?>
 
     </div>
@@ -113,4 +121,3 @@ if (!isset($_SESSION['usuario'])) {
 </div>
 </body>
 </html>
-La página se divide

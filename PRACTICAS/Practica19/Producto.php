@@ -84,6 +84,6 @@ class Producto
     }
 
     public function mostrarProducto(){
-        echo $this->getCod() . " " . $this->getNombre() . " " . $this->getNombreCorto() . " " . $this->getDescripcion() . " " . $this->getPVP() . " " . $this->getFamilia();
+        echo $this->getCod() . " " . $this->getPVP() . "<br>\n";
     }
 }

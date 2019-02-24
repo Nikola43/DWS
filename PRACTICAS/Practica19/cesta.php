@@ -28,23 +28,18 @@ die("Error - debe <a href='login.php'>identificarse</a>.<br />");
 </div>
 <div id="productos">
 <?php
-$total = 0;
 
-$lista_productos = $_SESSION['lista_productos'];
-//var_dump($lista_productos);
-echo "----------------------------------------------------------------------------------<br>\n";
-$cesta = $_SESSION['lista_productos'];
-//var_dump($cesta->getListaProductos());
-var_dump($_SESSION['lista_productos'][0][0]);
-foreach($_SESSION['lista_productos'] as $producto) {
-echo "<p><span class='codigo'>${producto['cod']}</span>";
-echo "<span class='nombre'>${producto['nombre']}</span>";
-echo "<span class='precio'>${producto['precio']}</span></p>";
-$total += $producto['precio'];
+$cesta = new CestaCompra();
+$cesta->setListaProducto($_SESSION['lista_productos']);
+
+foreach($cesta->getListaProductos() as $producto) {
+echo "<p><span class='codigo'>";
+echo $producto->mostrarProducto();
+echo "</span>";
 }
 ?>
 <hr />
-<p><span class='pagar'>Precio total: <?php print $total; ?> €</span></p>
+<p><span class='pagar'>Precio total: <?php print $cesta->calcularPrecioTotal(); ?> €</span></p>
 <form action='pagar.php' method='post'>
 <p>
 <span class='pagar'>
